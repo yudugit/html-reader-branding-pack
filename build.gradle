@@ -1,3 +1,87 @@
+// we're using this plugin to combine and minify the JavaScript in this project
+plugins {
+    id "com.eriwen.gradle.js" version "2.14.1"
+}
+
+// apply the JavaScript plugin
+apply plugin: 'js'
+
+// define the sources we are going work on, note that the name of the source set must match the folder name where the
+// sources reside
+javascript.source {
+    toolbar {
+        js {
+            srcDir "toolbar"
+            include "*.js"
+            exclude "*.min.js"
+        }
+    }
+    thumbnails {
+        js {
+            srcDir "thumbnails"
+            include "*.js"
+            exclude "*.min.js"
+        }
+    }
+    loading {
+        js {
+            srcDir "loading"
+            include "*.js"
+            exclude "*.min.js"
+        }
+    }
+    drawingToolbars {
+        js {
+            srcDir "drawingToolbars"
+            include "*.js"
+            exclude "*.min.js"
+        }
+    }
+}
+
+// add tasks to combine and minify for each of the source sets
+javascript.source.each { src ->
+    // common destination file for combined JavaScript and minified JavaScript - this is useful as it means the
+    // minification task doesn't have to delete the intermediate script file created by the combine task as it
+    // overwrites it
+    def minDest = file("${src.name}/${src.name}.min.js")
+    // create the combine task
+    task ("combine${src.name.capitalize()}Js", type: com.eriwen.gradle.js.tasks.CombineJsTask) {
+        source = src.js.files
+        dest = minDest
+    }
+    // create the minification task
+    task ("minify${src.name.capitalize()}Js", type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
+        // indicate that this is a minification task so that the minifyAllJs task below can find it
+        ext {
+            isMinifyTask = true
+        }
+        // use the output of the combine task as the input of the minification task
+        source = tasks["combine${src.name.capitalize()}Js"]
+        dest = minDest
+        // create the source map file too
+        sourceMap = file("${src.name}/${src.name}.min.sourcemap.json")
+        closure {
+            // set the log level
+            warningLevel = 'QUIET'
+        }
+    }
+}
+
+// minifies all the JavaScript in this project by depending on the dynamic minification tasks created above
+task minifyAllJs {
+    // keep a list of tasks that we should depend on
+    def toDependOn = []
+    tasks.each { aTask ->
+        // if it's a minification task, add it to the toDependOn list
+        if (aTask.ext.has("isMinifyTask") && aTask.ext.isMinifyTask) {
+            toDependOn.add(aTask)
+        }
+    }
+    // depend on all the minification tasks found
+    dependsOn = toDependOn
+}
+
 task wrapper(type: Wrapper) {
     gradleVersion = '2.14'
 }
