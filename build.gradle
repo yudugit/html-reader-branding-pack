@@ -11,6 +11,8 @@ apply plugin: 'css'
 
 
 def subProjects = ['toolbar', 'thumbnails', 'loading', 'drawingToolbars']
+def minificationTasks = []
+def compilationTasks = []
 
 subProjects.each { name ->
     // create JavaScript minification tasks for each of the customisable parts of this branding pack
@@ -24,52 +26,37 @@ subProjects.each { name ->
             // set the log level
             warningLevel = 'QUIET'
         }
-        ext {
-            isMinifyTask = true
-        }
     }
+    minificationTasks.add(tasks["minify${name.capitalize()}Js"])
     // create LESS compilation tasks for each of the customisable parts of this branding pack
     task "compile${name.capitalize()}Css"(type: com.eriwen.gradle.css.tasks.LessTask) {
         group = 'LESS Compilation'
         description "Compiles the LESS file for ${name}"
         source = file("${name}/style.less")
         dest = file("${name}/")
-        ext {
-            isLessTask = true
-        }
     }
+    compilationTasks.add(tasks["compile${name.capitalize()}Css"])
 }
 
 // minifies all the JavaScript in this project by depending on the dynamic minification tasks created above
 task minifyAllJs {
-    group = 'JavaScript Minification'
+    group = 'Branding Pack Build'
     description = 'Minifies all the JavaScript files in this project'
-    // keep a list of tasks that we should depend on
-    def toDependOn = []
-    tasks.each { aTask ->
-        // if it's a minification task, add it to the toDependOn list
-        if (aTask.ext.has("isMinifyTask") && aTask.ext.isMinifyTask) {
-            toDependOn.add(aTask)
-        }
-    }
-    // depend on all the minification tasks found
-    dependsOn = toDependOn
+    // depend on all the minification tasks
+    dependsOn = minificationTasks
 }
 
 // compiles all the LESS in this project by depending on the dynamic LESS tasks created above
 task compileAllCss {
-    group = 'LESS Compilation'
+    group = 'Branding Pack Build'
     description = 'Compiles all the LESS files in this project'
-    // keep a list of tasks that we should depend on
-    def toDependOn = []
-    tasks.each { aTask ->
-        // if it's a LESS task, add it to the toDependOn list
-        if (aTask.ext.has("isLessTask") && aTask.ext.isLessTask) {
-            toDependOn.add(aTask)
-        }
-    }
-    // depend on all the LESS tasks found
-    dependsOn = toDependOn
+    // depend on all the LESS compilation tasks
+    dependsOn = compilationTasks
+}
+
+task build(dependsOn: [minifyAllJs, compileAllCss]) {
+    group = 'Branding Pack Build'
+    description = 'Minifies the JavaScript files and compiles the LESS files for all parts of the branding pack'
 }
 
 task wrapper(type: Wrapper) {
