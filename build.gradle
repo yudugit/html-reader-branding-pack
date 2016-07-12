@@ -59,6 +59,16 @@ task build(dependsOn: [minifyAllJs, compileAllCss]) {
     description = 'Minifies the JavaScript files and compiles the LESS files for all parts of the branding pack'
 }
 
+task clean {
+    group = 'Branding Pack Build'
+    description = 'Cleans up all the output files from the build scripts'
+    subProjects.each { name ->
+        file("${name}/${name}.min.js").delete()
+        file("${name}/style.css").delete()
+        file("${name}/${name}.min.sourcemap.json").delete()
+    }
+}
+
 task wrapper(type: Wrapper) {
     gradleVersion = '2.14'
 }
