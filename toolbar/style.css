@@ -17,7 +17,7 @@
   height: 24px;
   display: inline-block;
   margin: 5px 10px;
-  padding: 0px;
+  padding: 0;
 }
 #controls .control:hover {
   cursor: pointer;
@@ -41,20 +41,24 @@
 #controls #rightControls {
   position: absolute;
   display: inline-block;
-  right: 0px;
-  top: 0px;
+  right: 0;
+  top: 0;
   height: inherit;
 }
 #controls #rightControls #desktopSearchContainer {
   display: none;
   position: relative;
   vertical-align: middle;
-  width: 156px; /* text area: 125px width, 25+4px padding, 1+1px border; without this limit, the moved icon contributes */
+  width: 156px;
+  /* text area: 125px width, 25+4px padding, 1+1px border; without this limit, the moved icon contributes */
+
   margin: 5px 10px 5px 10px;
 }
 #controls #rightControls #desktopSearchContainer #desktopSearchGo {
   position: relative;
-  right: 26px; /* 20px for width of icon, 6px for its padding */
+  right: 26px;
+  /* 20px for width of icon, 6px for its padding */
+
 }
 #controls #rightControls .control {
   vertical-align: middle;
