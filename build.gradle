@@ -18,7 +18,7 @@ subProjects.each { name ->
     // create JavaScript minification tasks for each of the customisable parts of this branding pack
     task "minify${name.capitalize()}Js"(type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
         group = 'JavaScript Minification'
-        description "Minifies the JavaScript file for the ${name}"
+        description "Minifies the JavaScript file for the ${name} and changes the config to use the minified file"
         source = file("${name}/${name}.js")
         dest = file("${name}/${name}.min.js")
         sourceMap = file("${name}/${name}.min.sourcemap.json")
@@ -47,7 +47,7 @@ subProjects.each { name ->
 // minifies all the JavaScript in this project by depending on the dynamic minification tasks created above
 task minifyAllJs {
     group = 'Branding Pack Build'
-    description = 'Minifies all the JavaScript files in this project'
+    description = 'Minifies all the JavaScript files in this project and updates all the config files to use the minified versions'
     // depend on all the minification tasks
     dependsOn = minificationTasks
 }
