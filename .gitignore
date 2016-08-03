@@ -3,3 +3,4 @@
 .gradle/
 *.min.js
 *.sourcemap.json
+*.css
