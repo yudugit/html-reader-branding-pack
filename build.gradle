@@ -26,8 +26,14 @@ subProjects.each { name ->
             // set the log level
             warningLevel = 'QUIET'
         }
+        doLast {
+            // after minifying the JavaScript update the reference in the config file to the minified file rather than
+            // the original source file
+            ant.replace(file: "${name}/${name}Config.json", token: "${name}/${name}.js", value: "${name}/${name}.min.js")
+        }
     }
     minificationTasks.add(tasks["minify${name.capitalize()}Js"])
+
     // create LESS compilation tasks for each of the customisable parts of this branding pack
     task "compile${name.capitalize()}Css"(type: com.eriwen.gradle.css.tasks.LessTask) {
         group = 'LESS Compilation'
@@ -66,6 +72,9 @@ task clean {
         file("${name}/${name}.min.js").delete()
         file("${name}/style.css").delete()
         file("${name}/${name}.min.sourcemap.json").delete()
+        // reverse the update of the config file so that it references the non-minified JavaScript source not the
+        // minified version
+        ant.replace(file: "${name}/${name}Config.json", token: "${name}/${name}.min.js", value: "${name}/${name}.js")
     }
 }
 
