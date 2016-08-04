@@ -1,0 +1,83 @@
+// we're using this plugin to combine and minify the JavaScript in this project
+plugins {
+    id "com.eriwen.gradle.js" version "2.14.1"
+    id "com.eriwen.gradle.css" version "2.14.0"
+}
+
+// apply the JavaScript plugin
+apply plugin: 'js'
+// apply the css plugin
+apply plugin: 'css'
+
+
+def subProjects = ['toolbar', 'thumbnails', 'loading', 'drawingToolbars']
+def minificationTasks = []
+def compilationTasks = []
+
+subProjects.each { name ->
+    // create JavaScript minification tasks for each of the customisable parts of this branding pack
+    task "minify${name.capitalize()}Js"(type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
+        group = 'JavaScript Minification'
+        description "Minifies the JavaScript file for the ${name} and changes the config to use the minified file"
+        source = file("${name}/${name}.js")
+        dest = file("${name}/${name}.min.js")
+        sourceMap = file("${name}/${name}.min.sourcemap.json")
+        closure {
+            // set the log level
+            warningLevel = 'QUIET'
+        }
+        doLast {
+            // after minifying the JavaScript update the reference in the config file to the minified file rather than
+            // the original source file
+            ant.replace(file: "${name}/${name}Config.json", token: "${name}/${name}.js", value: "${name}/${name}.min.js")
+        }
+    }
+    minificationTasks.add(tasks["minify${name.capitalize()}Js"])
+
+    // create LESS compilation tasks for each of the customisable parts of this branding pack
+    task "compile${name.capitalize()}Css"(type: com.eriwen.gradle.css.tasks.LessTask) {
+        group = 'LESS Compilation'
+        description "Compiles the LESS file for ${name}"
+        source = file("${name}/style.less")
+        dest = file("${name}/")
+    }
+    compilationTasks.add(tasks["compile${name.capitalize()}Css"])
+}
+
+// minifies all the JavaScript in this project by depending on the dynamic minification tasks created above
+task minifyAllJs {
+    group = 'Branding Pack Build'
+    description = 'Minifies all the JavaScript files in this project and updates all the config files to use the minified versions'
+    // depend on all the minification tasks
+    dependsOn = minificationTasks
+}
+
+// compiles all the LESS in this project by depending on the dynamic LESS tasks created above
+task compileAllCss {
+    group = 'Branding Pack Build'
+    description = 'Compiles all the LESS files in this project'
+    // depend on all the LESS compilation tasks
+    dependsOn = compilationTasks
+}
+
+task build(dependsOn: [minifyAllJs, compileAllCss]) {
+    group = 'Branding Pack Build'
+    description = 'Minifies the JavaScript files and compiles the LESS files for all parts of the branding pack'
+}
+
+task clean {
+    group = 'Branding Pack Build'
+    description = 'Cleans up all the output files from the build scripts'
+    subProjects.each { name ->
+        file("${name}/${name}.min.js").delete()
+        file("${name}/style.css").delete()
+        file("${name}/${name}.min.sourcemap.json").delete()
+        // reverse the update of the config file so that it references the non-minified JavaScript source not the
+        // minified version
+        ant.replace(file: "${name}/${name}Config.json", token: "${name}/${name}.min.js", value: "${name}/${name}.js")
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.14'
+}
