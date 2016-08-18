@@ -107,7 +107,10 @@ Note that the JavaScript minification process also updates the config file in ea
 This repository includes the Gradle wrapper which can be used to run the tasks without installing Gradle itself. For more information about how this works and how to use the Gradle wrapper see the official documentation [here](https://docs.gradle.org/current/userguide/gradle_wrapper.html). Typically you should only need to run `./gradlew build` and not concern yourself with the tasks in the *JavaScript Minification* and *LESS Compilation* groups.
 
 ## String Overrides
-The strings shown in the HTML reader are localisable to enable editions to be shown in different languages. There is also the ability to override the default strings used by the HTML reader in this branding pack via the `customStringsPack.json` file. This file is read by the HTML reader and any strings included in it are used as overrides for the defaults, thus you only have to include the strings you want to change not all of them in this file. The current default English values are as follows (in JSON format):
+The strings shown in the HTML reader are localisable to enable editions to be shown in different languages.
+There is also the ability to override the default strings used by the HTML reader in this branding pack via the `customStringsPack.json` file.
+This file is read by the HTML reader and any strings included in it are used as overrides for the defaults, thus you only have to include the strings you want to change not all of them in this file.
+The current default English values are as follows (in JSON format):
 
 ```json
 {  
