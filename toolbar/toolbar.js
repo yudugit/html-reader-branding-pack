@@ -112,6 +112,9 @@ var createButtons = function() {
     if (yudu_toolbarSettings.editionListEnabled) {
         createButton('editionList', buttonOtherThanTogglableHit(this, yudu_toolbarFunctions.editionListClicked), highResIcons);
     }
+    if (yudu_toolbarSettings.hasArticles) {
+        createButton('phoneview', buttonOtherThanTogglableHit(this, yudu_toolbarFunctions.openPhoneView), highResIcons);
+    }
     if (yudu_toolbarSettings.fullscreenModeEnabled) {
         initFullscreen(highResIcons);
     }
