@@ -131,7 +131,7 @@ var createButtons = function() {
     if (yudu_toolbarSettings.sharing.emailEnabled || yudu_toolbarSettings.sharing.twitter || yudu_toolbarSettings.sharing.facebook) {
         createButton('share', toggleShareAction, highResIcons);
     }
-    if (yudu_toolbarSettings.hasDownloadablePdf && !yudu_toolbarSettings.isThisAnApp) {
+    if (yudu_toolbarSettings.hasDownloadablePdfAndIsNotApp) {
         createButton('downloadPdf', buttonOtherThanTogglableHit(this, yudu_toolbarFunctions.downloadPdfClicked), highResIcons);
     }
     if (yudu_toolbarSettings.searchEnabled && !yudu_commonSettings.isDesktop) {
