@@ -347,6 +347,7 @@ It follows the following structure:
     + `UGC_PAGE_HIGHLIGHTS_CHANGED`
     + `UGC_NOTES_CHANGED`
     + `LOGIN_SUCCESS`
+    + `LOGIN_APPROVED`
 + `TOOLBAR`
     + `FIT_WIDTH_OR_SCREEN_ACTION`
     + `UPDATE_SHOPPING_CART_BUTTON`
@@ -530,6 +531,7 @@ Its two components will be available as the following global variables:
 + `highlightsEnabled` - `true` if the edition was set up with page highlights (annotations) enabled, `false` otherwise
 + `pageModeStopToggle` - `true` if the edition was set up to prevent the current page mode (one page visible or two) from being toggled, `false` otherwise
 + `fullscreenModeEnabled` - `true` if the edition was set up to allow users to enter fullscreen mode, `false` otherwise
++ `hasArticles` - `true` if the edition was set up with HTML articles to be used in PhoneView, `false` otherwise
 
 #### Toolbar Functions
 
@@ -559,6 +561,12 @@ Its two components will be available as the following global variables:
     + available only when `yudu_toolbarSettings.bookmarksEnabled` is `true`
 + `notesClicked` – call when the `notes` button is clicked
     + available only when `yudu_toolbarSettings.notesEnabled` is `true`
++ `articlesAvailable` - call to check if articles data is available
+    + for a protected edition, may start returning `false` but later return `true` if a user has logged in successfully
+    + may subscribe to the `COMMON.LOGIN_APPROVED` event for hints of changes to this result
+    + once articles data is available, it should not become "unavailable" during the lifetime of the reader
++ `openPhoneView` - call when the `phoneview` button is clicked
+    + will do nothing unless `yudu_toolbarSettings.hasArticles` is `true` and `articlesAvailable` returns true
 + `setAutoHide(enable)` – call when a button triggering a togglable is clicked to stop the toolbar from hiding when the togglable is shown (`enable = false`) or to re-enable auto hiding after a certain period of time when the togglable is hidden (`enable = true`)
     + a togglable is a feature represented by a box whose visibility is toggled by a toolbar button and which requires the toolbar to remain visible for the duration for which it's shown (e.g. sharing or contents)
 
