@@ -515,7 +515,7 @@ Its two components will be available as the following global variables:
 + `iconHighResPrefix` – the prefix added to the name of the images used for high resolution devices
 + `iconFileExtension` – the extension of the image files used for the toolbar buttons
 + `shouldUseHighRes` – `true` if the images for high resolution should be used, `false` otherwise
-+ `hasDownloadablePdf` – `true` if the edition was set up with a downloadable PDF, `false` otherwise
++ `hasDownloadablePdfAndIsNotApp` – `true` if the edition was set up with a downloadable PDF and is not being used within an app on a device, `false` otherwise
 + `searchEnabled` – `true` if the edition was set up with search enabled, `false` otherwise
 + `editionListEnabled` – `true` if the edition was set up with the edition list (archive view) enabled and it is not being shown within an app, `false` otherwise
 + `orderFormEnabled` – `true` if the edition was set up with the order form enabled, `false` otherwise
