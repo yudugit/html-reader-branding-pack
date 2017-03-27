@@ -213,6 +213,7 @@ The current default English values are as follows (in JSON format):
    "orderForm.totalPrice":"Total",
    "orderForm.dismissOrderForm":"Continue Shopping",
    "orderForm.send":"Send Order",
+   "orderForm.download": "Download Cart to CSV",
    "orderForm.next":"Next >",
    "orderForm.previous":"< Previous",
    "orderForm.genericError":"An error occurred contacting the server",
