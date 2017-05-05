@@ -639,6 +639,9 @@ var onResize = function () {
 var onLoginApproved = function() {
     if (yudu_toolbarFunctions.articlesAvailable()) {
         showButton('phoneview');
+        if (!yudu_commonSettings.isDesktop) {
+            positionButtonsForTouch();
+        }
         yudu_events.unsubscribe(yudu_events.ALL, yudu_events.COMMON.LOGIN_APPROVED, onLoginApproved, false);
     }
 };
