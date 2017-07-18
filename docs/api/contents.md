@@ -9,21 +9,22 @@ Its sole component will be available as the following global variable:
 ## Contents Settings
 
 + `contentsData` – the ToC data as set in Publisher
-    + the data consists of an array of objects with format e.g.:
-            ```
-            {
-                "page": 1,
-                "description": "Cover",
-                "children": [
-                    {
-                        "page": 1,
-                        "description": "Title 1"
-                    },
-                    {
-                        "page": 1,
-                        "description": "Title 2"
-                    }
-                ]
-            }
-            ```
     + only the root objects may have children
+    + the data consists of an array of objects with a format like:
+
+```json
+{
+    "page": 1,
+    "description": "Cover",
+    "children": [
+        {
+            "page": 1,
+            "description": "Title 1"
+        },
+        {
+            "page": 1,
+            "description": "Title 2"
+        }
+    ]
+}
+```
