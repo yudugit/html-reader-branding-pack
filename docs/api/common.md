@@ -1,4 +1,4 @@
-### Common
+# Common
 
 The "Common" sub-interface is that which provides functionality most broadly applicable, and potentially useful to any of the submodules.
 Its two components will be available as the following global variables:
@@ -6,7 +6,7 @@ Its two components will be available as the following global variables:
 + [settings](#common-settings): `yudu_commonSettings`
 + [functions](#common-functions): `yudu_commonFunctions`
 
-#### Common Settings
+## Common Settings
 
 + `brandingFolderPath` – path of the folder where the submodules are placed
 + `isDesktop` – `true` if the Reader is running on a desktop, `false` if it is running on a touch device
@@ -19,7 +19,7 @@ Its two components will be available as the following global variables:
 + `hasIntroPage` – `true` if the edition was set up with an intro page, `false` otherwise
 + `createjs` – the "easel" library module
 
-#### Common Functions
+## Common Functions
 
 + `returnDynamicInput(input)` - returns a function that returns the (dynamic) value of `input` when called
     + if `input` is a function, it will be called (with no arguments) before its value is returned

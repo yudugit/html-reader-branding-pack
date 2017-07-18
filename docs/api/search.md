@@ -1,11 +1,11 @@
-### Search
+# Search
 
 The "Search" sub-interface provides functionality most useful to the search section of the toolbar submodule.
 Its sole component will be available as the following global variable:
 
 + [functions](#search-functions): `yudu_searchFunctions`
 
-#### Search Functions
+## Search Functions
 
 + `setBrandableSearchComponents(searchTextComponent, searchGoComponent)` – provide the text box (`input` tag) and button (`button` tag) search components
 + `positionDesktopSearchResults(position, corners)` – as the search results box depends on the toolbar position, it is necessary to position it

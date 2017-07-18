@@ -1,4 +1,4 @@
-## String Overrides
+# String Overrides
 The strings shown in the HTML reader are localisable to enable editions to be shown in different languages.
 There is also the ability to override the default strings used by the HTML reader in this branding pack via the `customStringsPack.json` file.
 This file is read by the HTML reader and any strings included in it are used as overrides for the defaults, thus you only have to include the strings you want to change not all of them in this file.

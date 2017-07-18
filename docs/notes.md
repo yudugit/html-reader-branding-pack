@@ -1,4 +1,4 @@
-## Final Notes
+# Final Notes
 
 + Use the `click` event type instead of `yudu_commonSettings.clickAction` for elements where `touchstart` might be triggered by something else
     + for example, scrolling through the list of contents

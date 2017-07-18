@@ -1,4 +1,4 @@
-### Loading
+# Loading
 
 The "Loading" sub-interface provides functionality most useful to the loading screen submodule.
 Its two components will be available as the following global variables:
@@ -6,7 +6,7 @@ Its two components will be available as the following global variables:
 + [settings](#loading-settings): `yudu_loadingSettings`
 + [functions](#loading-functions): `yudu_loadingFunctions`
 
-#### Loading Settings
+## Loading Settings
 
 + `bgTopColour` - colour code used in defining the gradient fill for the background of the edition
     + colour codes should be in hex form, but omit the leading `#`
@@ -18,7 +18,7 @@ Its two components will be available as the following global variables:
     + if not specified, uses the value applied to the edition in its Branding Settings prior to publishing, or else defaults to black
 + `loadingString` - a descriptive (localised) string that can be used to label the loading bar
 
-#### Loading Functions
+## Loading Functions
 
 + `setGradientBackground(jquerySelector, settings)` - apply a gradient defined by `settings` to the first object in the `jquerySelector`
     + `settings` should contain appropriate `bgTopColour` and `bgBottomColour` colour code attributes

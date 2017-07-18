@@ -1,4 +1,4 @@
-### Sharing
+# Sharing
 
 The "Sharing" sub-interface provides functionality most useful to the sharing section of the toolbar submodule.
 Its two components will be available as the following global variables:
@@ -6,14 +6,14 @@ Its two components will be available as the following global variables:
 + [settings](#sharing-settings): `yudu_sharingSettings`
 + [functions](#sharing-functions): `yudu_sharingFunctions`
 
-#### Sharing Settings
+## Sharing Settings
 
 + `twitterIconPath` – the path of the image used for the Twitter icon in the sharing box
     + available only if `yudu_toolbarSettings.sharing.twitter` is `true`
 + `facebookIconPath` – the path of the image used for the Facebook icon in the sharing box
     + available only if `yudu_toolbarSettings.sharing.facebook` is `true`
 
-#### Sharing Functions
+## Sharing Functions
 
 + `togglePage(currentPageClicked)` – call when the selection for the page about to be shared is toggled
     + `currentPageClicked` should be `true` if the current page is selected for sharing, and `false` otherwise

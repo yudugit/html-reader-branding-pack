@@ -1,4 +1,4 @@
-## Building the HTML Reader Branding Pack
+# Building the HTML Reader Branding Pack
 
 To build the branding pack you can use the provided Gradle tasks which are declared in `build.gradle`. The tasks of interest are located in the *Branding Pack Build tasks* group which are listed below:
 
@@ -11,5 +11,5 @@ Each of the minification and compilation tasks works in the default state of the
 
 Note that the JavaScript minification process also updates the config file in each submodule to make sure it references the minified version instead of the original source version. The `clean` task will undo this change.
 
-### Running Gradle
+## Running Gradle
 This repository includes the Gradle wrapper which can be used to run the tasks without installing Gradle itself. For more information about how this works and how to use the Gradle wrapper see the official documentation [here](https://docs.gradle.org/current/userguide/gradle_wrapper.html). Typically you should only need to run `./gradlew build` and not concern yourself with the tasks in the *JavaScript Minification* and *LESS Compilation* groups.

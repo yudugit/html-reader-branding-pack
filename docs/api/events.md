@@ -1,4 +1,4 @@
-### Events
+# Events
 
 The "Events" sub-interface provides functionality related to listening/subscribing to Reader events.
 Like "Common", this sub-interface should be available to all the brandable submodules.
@@ -7,7 +7,7 @@ Unlike some other sub-interfaces, everything related to events is available on t
 This includes the [event topics](#event-topics), [event emitter](#event-emitter), and all the [events functions](#events-functions).
 
 
-#### Event Topics
+## Event Topics
 
 The events interface provides a list of known topics the submodules can subscribe to.
 A topic is essentially a type of event.
@@ -42,12 +42,12 @@ It follows the following structure:
     + `DISPLAY_PROGRESS`
     + `END_LOADING`
 
-#### Event Emitter
+## Event Emitter
 
 An event emitter is how the Reader tracks the source of an event.
 The events intended for the submodules will have a generic emitter named `yudu_events.ALL`.
 
-#### Events Functions
+## Events Functions
 
 + `subscribe(emitter, topic, callback, async)` – subscribes the given callback function to the emitter and topic combination
 + `unsubscribe(emitter, topic, callback, async)` – unsubscribes the given callback function from the emitter and topic combination

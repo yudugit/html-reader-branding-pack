@@ -1,4 +1,4 @@
-### Toolbar
+# Toolbar
 
 The "Toolbar" sub-interface provides functionality most useful to the toolbar submodule.
 Its two components will be available as the following global variables:
@@ -6,7 +6,7 @@ Its two components will be available as the following global variables:
 + [settings](#toolbar-settings): `yudu_toolbarSettings`
 + [functions](#toolbar-functions): `yudu_toolbarFunctions`
 
-#### Toolbar Settings
+## Toolbar Settings
 
 + `toolbarIconBasePath` – the path of the folder where the images used for the toolbar buttons are
 + `iconHighResPrefix` – the prefix added to the name of the images used for high resolution devices
@@ -30,7 +30,7 @@ Its two components will be available as the following global variables:
 + `fullscreenModeEnabled` - `true` if the edition was set up to allow users to enter fullscreen mode, `false` otherwise
 + `hasArticles` - `true` if the edition was set up with HTML articles to be used in PhoneView, `false` otherwise
 
-#### Toolbar Functions
+## Toolbar Functions
 
 + `zoomInClicked` – call when the `zoomIn` button is clicked
 + `zoomOutClicked` – call when the `zoomOut` button is clicked

@@ -1,4 +1,4 @@
-### Thumbnails
+# Thumbnails
 
 The "Thumbnails" sub-interface provides functionality most useful to the thumbnails submodule.
 Its two components will be available as the following global variables:
@@ -6,7 +6,7 @@ Its two components will be available as the following global variables:
 + [settings](#thumbnails-settings): `yudu_thumbnailsSettings`
 + [functions](#thumbnails-functions): `yudu_thumbnailsFunctions`
 
-#### Thumbnails Settings
+## Thumbnails Settings
 
 + `pagesDetails` – an array of objects which contain details about each page necessary for generating thumbnails
     + the format of the object is e.g.:
@@ -29,7 +29,7 @@ Its two components will be available as the following global variables:
 + `tickTimeMs` – the time between ticks
 + `baseThumbnailFolder` - the path of the folder where the images used for thumbnails are
 
-#### Thumbnails Functions
+## Thumbnails Functions
 
 + `getCurrentPage` – the page index for the page the edition is currently opened to
     + will be the left-hand page in two-up mode

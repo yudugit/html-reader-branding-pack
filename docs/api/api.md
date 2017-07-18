@@ -1,4 +1,4 @@
-## The Brandable Submodules API
+# The Brandable Submodules API
 
 The following sections attempt to outline the functionality of the HTML Reader exposed to the submodules.
 It is split into multiple "sub-interfaces", with most submodules having access to targeted "settings" and "functions" components.
