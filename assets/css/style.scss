@@ -3,6 +3,23 @@
 
 @import "{{ site.theme }}";
 
+// "fixes" for theme styling
+.highlight {
+    // stop the highlight class from breaking background colours for overflowing code
+    background-color: #fff;
+}
+
+ul, ol {
+    // stop adding margins in the middle of lists
+    margin-bottom: 0
+}
+
+:not(li)>ul, :not(li)>ol {
+    // only add margins to the outermost list
+    margin-bottom: 15px
+}
+
+// custom styling
 #links {
     position: absolute;
     width: 210px;
