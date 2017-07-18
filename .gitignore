@@ -1,6 +1,6 @@
-.idea/
+*.css
 *.iml
-.gradle/
 *.min.js
 *.sourcemap.json
-*.css
+.gradle/
+.idea/
