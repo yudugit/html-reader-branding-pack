@@ -1,4 +1,5 @@
 theme: jekyll-theme-slate
 title: The HTML Reader Branding Pack
-description: Modifiable branding pack for Yudu's HTML Reader.
+description: Modifiable branding pack for <a href='http://www.yudu.com'>Yudu</a>'s HTML Reader.
 show_downloads: true
+show_header_links: true
