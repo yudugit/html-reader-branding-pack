@@ -3,11 +3,11 @@
 The HTML Reader "Branding Pack" loosely consists of three different sets of materials.
 
 1. Images
-    + for example, the "artwork" subfolder is where most of the images for the UI are kept
+    + the "artwork" subfolder is where most of the images for the Reader's UI are kept
 2. Overrides
-    + for example, an edition- or publication-specific language pack may be included in the branding pack to allow specific override values for the default language packs
+    + an edition- or publication-specific language pack may be included in the branding pack to allow specific override values for the default language packs
 3. [Brandable submodule scripts](./api/api.md)
-    + for example, scripts that allow near-complete control over the Reader's various toolbars and several other UI elements
+    + there are several scripts that together allow near-complete control over the Reader's various toolbars and several other UI elements
 
 This document largely focuses on the latter.
 It outlines the interface provided by the Reader for the brandable submodules within.
