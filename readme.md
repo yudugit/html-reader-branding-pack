@@ -95,16 +95,18 @@ If you do, please also remember to use the correct file name references in the s
 To build the branding pack you can use the provided Gradle tasks which are declared in `build.gradle`. The tasks of interest are located in the *Branding Pack Build tasks* group which are listed below:
 
 - **build** - _Minifies the JavaScript files and compiles the LESS files for all parts of the branding pack_
-- **clean** - _Cleans up all the output files from the build scripts_
+- **cleanBuild** - _Cleans up a build folder, if present_
+- **cleanSubmodules** - _Cleans up all modified and transitional files from the build scripts_
 - **compileAllCss** - _Compiles all the LESS files in this project_
 - **minifyAllJs** - _Minifies all the JavaScript files in this project and updates all the config files to use the minified versions_
+- **prepareBrandingPack** - _Builds the pack, then copies the necessary files into a separate build folder_
 
 Each of the minification and compilation tasks works in the default state of the repository, as in they expect a single JavaScript file to minify and a single LESS file to compile in each submodule.
 
-Note that the JavaScript minification process also updates the config file in each submodule to make sure it references the minified version instead of the original source version. The `clean` task will undo this change.
+Note that the JavaScript minification process also updates the config file in each submodule to make sure it references the minified version instead of the original source version. The `cleanSubmodules` task will undo this change.
 
 ### Running Gradle
-This repository includes the Gradle wrapper which can be used to run the tasks without installing Gradle itself. For more information about how this works and how to use the Gradle wrapper see the official documentation [here](https://docs.gradle.org/current/userguide/gradle_wrapper.html). Typically you should only need to run `./gradlew build` and not concern yourself with the tasks in the *JavaScript Minification* and *LESS Compilation* groups.
+This repository includes the Gradle wrapper which can be used to run the tasks without installing Gradle itself. For more information about how this works and how to use the Gradle wrapper see the official documentation [here](https://docs.gradle.org/current/userguide/gradle_wrapper.html). Typically you should only need to run `./gradlew build` or `./gradlew prepareBrandingPack` and not concern yourself with the tasks in the *JavaScript Minification* and *LESS Compilation* groups.
 
 ## String Overrides
 The strings shown in the HTML reader are localisable to enable editions to be shown in different languages.
