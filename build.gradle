@@ -87,6 +87,41 @@ task cleanSubmodules {
     dependsOn = cleaningTasks
 }
 
+task cleanBuild(type: Delete) {
+    group = 'Branding Pack Build'
+    description = 'Cleans up the output build folder'
+    delete 'build'
+}
+
+// builds the pack, copies assets into a `build` folder, then cleans up again
+task prepareBrandingPack(type: Copy, dependsOn: [cleanBuild, build, cleanSubmodules]) {
+    group = 'Branding Pack Build'
+    description = "Copy the built branding pack files into a separate build folder"
+    build.mustRunAfter cleanBuild
+    cleanSubmodules.mustRunAfter build
+    from "./"
+    include 'loading/'
+    exclude 'loading/loading.js'
+    include 'thumbnails/'
+    exclude 'thumbnails/thumbnails.js'
+    include 'toolbar/'
+    exclude 'toolbar/toolbar.js'
+    include 'drawingToolbars/'
+    exclude 'drawingToolbars/drawingToolbars.js'
+    include 'artwork/'
+    include 'info/'
+    include 'rollovers/'
+    include 'phoneview/'
+    include 'customStringsPack.json/'
+    include 'logo.png'
+    include 'placeholder.png'
+    // exclude all sourcemap files
+    exclude '**/*.min.sourcemap.json'
+    // exclude all less files
+    exclude '**/*.less'
+    into 'build/'
+}
+
 task wrapper(type: Wrapper) {
     gradleVersion = '2.14'
 }
