@@ -21,3 +21,19 @@ The `clean` task will undo this change.
 This repository includes the Gradle wrapper which can be used to run the tasks without installing Gradle itself.
 For more information about how this works and how to use the Gradle wrapper see [the official documentation](https://docs.gradle.org/current/userguide/gradle_wrapper.html).
 Typically you should only need to run `./gradlew build` and not concern yourself with the tasks in the *JavaScript Minification* and *LESS Compilation* groups.
+
+## Uploading your branding pack
+
+Once you have build the pack, there is one more step you will need to take before you can upload your pack.
+A ZIP archive of all the files you wish to include still needs to be created.
+As noted in the [introduction](./intro.md#important-information), you only need to include those files you actively wish to override.
+You should use the layout of files in the default branding pack as a guide.
+Any images you wish to use should be included, as should the custom strings pack if you have added any.
+You do not need to include any of the documentation, or the build scripts, in your pack - these will make it unnecessarily large.
+Minified scripts are preferred over unminified - the latter should be omitted altogether from the bundle.
+Make sure not to forget the configuration JSONs for each submodule you have made changes to, especially if you have used scripts with different names to the default.
+Crucially, ensure that there is no root folder in your archive, or the pack will not work.
+Finally, upload your archive, specifying the file usage as being for the "HTML Reader branding pack".
+
+Did you know that you can upload a branding pack to a Publication and use it for every Edition it contains?
+This way you only need to upload your file once, and make changes to it in one place.
