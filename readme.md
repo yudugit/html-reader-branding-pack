@@ -98,8 +98,9 @@ To build the branding pack you can use the provided Gradle tasks which are decla
 - **cleanBuild** - _Cleans up a build folder, if present_
 - **cleanSubmodules** - _Cleans up all modified and transitional files from the build scripts_
 - **compileAllCss** - _Compiles all the LESS files in this project_
+- **copyBrandingPack** - _Builds the pack, then copies the necessary files into a separate build folder_
 - **minifyAllJs** - _Minifies all the JavaScript files in this project and updates all the config files to use the minified versions_
-- **prepareBrandingPack** - _Builds the pack, then copies the necessary files into a separate build folder_
+- **prepareBrandingPack** - _Builds the pack, copies it, then cleans up the modified and transitional files_
 
 Each of the minification and compilation tasks works in the default state of the repository, as in they expect a single JavaScript file to minify and a single LESS file to compile in each submodule.
 

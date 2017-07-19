@@ -93,12 +93,11 @@ task cleanBuild(type: Delete) {
     delete 'build'
 }
 
-// builds the pack, copies assets into a `build` folder, then cleans up again
-task prepareBrandingPack(type: Copy, dependsOn: [cleanBuild, build, cleanSubmodules]) {
+// builds the pack then copies the assets into a `build` folder
+task copyBrandingPack(type: Copy, dependsOn: [cleanBuild, build]) {
     group = 'Branding Pack Build'
     description = "Copy the built branding pack files into a separate build folder"
     build.mustRunAfter cleanBuild
-    cleanSubmodules.mustRunAfter build
     from "./"
     include 'loading/'
     exclude 'loading/loading.js'
@@ -120,6 +119,12 @@ task prepareBrandingPack(type: Copy, dependsOn: [cleanBuild, build, cleanSubmodu
     // exclude all less files
     exclude '**/*.less'
     into 'build/'
+}
+
+task prepareBrandingPack(type: Copy, dependsOn: [copyBrandingPack, cleanSubmodules]) {
+    group = 'Branding Pack Build'
+    description = "Coordinate copying the built pack and cleaning modified files"
+    cleanSubmodules.mustRunAfter copyBrandingPack
 }
 
 task wrapper(type: Wrapper) {
