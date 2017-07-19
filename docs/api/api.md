@@ -10,7 +10,7 @@ The exceptions to this are the "Common" and "Events" sub-interfaces, which shoul
 
 ## The Submodules
 
-+ [Return to the Table of Contents](../toc.md)
++ [Return to the Table of Contents](../../readme.md)
 + [Common](./common.md)
 + [Contents](./contents.md)
 + [Events](./events.md)

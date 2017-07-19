@@ -1,4 +1,39 @@
 # The HTML Reader Branding Pack
 
-The HTML Reader branding pack is a bundle of images, overrides, and scripts that can be applied to [Yudu](http://www.yudu.com)'s HTML Reader.
-A good starting point is the [table of contents](docs/toc.md).
+The HTML Reader branding pack is a bundle of materials that can be applied to [Yudu](http://www.yudu.com)'s HTML Reader.
+
+## Table of Contents
+
++ [Home](#)
++ [Table of Contents](#table-of-contents)
++ [Introduction](./docs/intro.md)
+  + [Important Information](./docs/intro.md#important-information)
+  + [Background on the HTML Reader](./docs/intro.md#background-on-the-html-reader)
+      + [The HTML Reader Build Process](./docs/intro.md#the-html-reader-build-process)
++ [Building the Branding Pack](./docs/building.md)
++ [String Overrides](./docs/overrides/strings.md)
++ [The Brandable Submodules API](./docs/api/api.md)
+    + [Common](./docs/api/common.md)
+        + [Common Settings](./docs/api/common.md#common-settings)
+        + [Common Functions](./docs/api/common.md#common-functions)
+    + [Contents](./docs/api/contents.md)
+        + [Contents Settings](./docs/api/contents.md#contents-settings)
+    + [Events](./docs/api/events.md)
+        + [Event Topics](./docs/api/events.md#event-topics)
+        + [Event Emitter](./docs/api/events.md#event-emitter)
+        + [Events Functions](./docs/api/events.md#events-functions)
+    + [Loading](./docs/api/loading.md)
+        + [Loading Settings](./docs/api/loading.md#loading-settings)
+        + [Loading Functions](./docs/api/loading.md#loading-functions)
+    + [Search](./docs/api/search.md)
+        + [Search Functions](./docs/api/search.md#search-functions)
+    + [Sharing](./docs/api/sharing.md)
+        + [Sharing Settings](./docs/api/sharing.md#sharing-settings)
+        + [Sharing Functions](./docs/api/sharing.md#sharing-functions)
+    + [Thumbnails](./docs/api/thumbnails.md)
+        + [Thumbnails Settings](./docs/api/thumbnails.md#thumbnails-settings)
+        + [Thumbnails Functions](./docs/api/thumbnails.md#thumbnails-functions)
+    + [Toolbar](./docs/api/toolbar.md)
+        + [Toolbar Settings](./docs/api/toolbar.md#toolbar-settings)
+        + [Toolbar Functions](./docs/api/toolbar.md#toolbar-functions)
++ [Final Notes](./docs/notes.md)
