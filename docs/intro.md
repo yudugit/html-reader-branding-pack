@@ -39,7 +39,7 @@ After being extracted, each can now be considered a part of the "BrandableSubmod
 ### The HTML Reader Build Process
 
 The HTML Reader undergoes an optimisation process called minification as part of its build process.
-One reason among many for doing this to combine multiple development-versioned source files into a single, smaller file for ease of deployment.
+One reason among many for doing this is to combine multiple development-versioned source files into a single, smaller file for ease of deployment.
 In addition to this, all the code in the default branding pack is minified during its build process.
 In fact, if you do not override the configurable JSON settings files but only upload an unminified submodule script, your script will not override the default.
 This is due to the build process, which minifies all scripts, and in particular then updates the references in the settings files to point to these minified files.
