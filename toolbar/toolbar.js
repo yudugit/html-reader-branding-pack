@@ -1,5 +1,6 @@
 var controls = $('#controls');
 var buttons = {};
+var buttonCallbacks = {};
 var visibleButtons = {
     __yudu_count: 0
 };
@@ -85,6 +86,7 @@ var createBar = function() {
         controls.addClass('touchDevice');
     }
     createButtons();
+    addButtonListener();
 };
 
 var showLogo = function() {
@@ -190,7 +192,7 @@ var createButton = function(id, callback, highResIcons) {
         button.addClass('touchControl');
     }
     button.css('background-image', 'url(' + iconPath + ')');
-    button.on(yudu_commonSettings.clickAction, callback);
+    buttonCallbacks[id] = callback;
     newButton(id, button);
     button.insertBefore($('#rightControls'));
 };
@@ -246,6 +248,30 @@ var getIconFor = function(id, highResIcons) {
     return yudu_toolbarSettings.toolbarIconBasePath
             + (highResIcons ? yudu_toolbarSettings.iconHighResPrefix : '')
             + id + yudu_toolbarSettings.iconFileExtension;
+};
+
+/**
+ * Add a listener for tap events to the toolbar
+ * Defers button check to the event handler, so that one handler manages all buttons
+ */
+var addButtonListener = function() {
+    var controlsManager = yudu_commonFunctions.createHammerJSTapManager(controls[0]);
+    controlsManager.on('tap', handleButtonPress);
+};
+
+/**
+ * Callback for tap events on the toolbar
+ * Checks if a button was pressed, and if so, activates its associated callback
+ * @param event {*} fired by HammerJS, DOM event nested in `event.srcEvent`
+ */
+var handleButtonPress = function(event) {
+    var element = event.target;
+    if (element && element.id) {
+        var callback = buttonCallbacks[element.id];
+        if (typeof callback == 'function') {
+            callback();
+        }
+    }
 };
 
 /**
