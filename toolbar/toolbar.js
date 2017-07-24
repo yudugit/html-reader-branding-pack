@@ -411,7 +411,6 @@ var initSharing = function() {
      * @param id {string} of the element on page acting as a button and that will contain the image
      * @param imgPath {string} URL of an image to use for the button
      * @param callback {Function} to call when the button is activated
-     * Note the callback should expect a HammerJS event; the DOM event will be nested in `event.srcEvent`
      */
     var addSharingButton = function(id, imgPath, callback) {
         var button = document.getElementById(id);
@@ -420,33 +419,33 @@ var initSharing = function() {
         icon.src = imgPath;
         button.insertBefore(icon, button.firstChild);
         button.style.display = 'block';
-        sharingCallbacks[id] = callback;
+        sharingCallbacks[id] = sharingCallback(callback);
+    };
+
+    /**
+     * Create a callback for when a sharing button is activated
+     * Wraps a callback in shared code to manage the UI changes
+     * @param buttonCallback {Function} that triggers any unique behaviour assigned to the button
+     * @returns {Function} that expects a HammerJS event, and passes it on
+     */
+    var sharingCallback = function(buttonCallback) {
+        return function(event) {
+            hideSharing();
+            typeof buttonCallback == 'function' && buttonCallback(event);
+            yudu_commonFunctions.hideToolbar();
+        }
     };
 
     if (yudu_toolbarSettings.sharing.emailEnabled) {
-        addSharingButton('email', yudu_toolbarSettings.toolbarIconBasePath + 'email.png', function(event) {
-            event.srcEvent.stopPropagation();
-            hideSharing();
-            yudu_sharingFunctions.shareEmail();
-            yudu_commonFunctions.hideToolbar();
-            return false;
-        });
+        addSharingButton('email', yudu_toolbarSettings.toolbarIconBasePath + 'email.png', yudu_sharingFunctions.shareEmail);
     }
 
     if(yudu_toolbarSettings.sharing.twitter) {
-        addSharingButton('twitter', yudu_sharingSettings.twitterIconPath, function() {
-            hideSharing();
-            yudu_sharingFunctions.shareTwitter();
-            yudu_commonFunctions.hideToolbar();
-        });
+        addSharingButton('twitter', yudu_sharingSettings.twitterIconPath, yudu_sharingFunctions.shareTwitter);
     }
 
     if(yudu_toolbarSettings.sharing.facebook) {
-        addSharingButton('facebook', yudu_sharingSettings.facebookIconPath, function() {
-            hideSharing();
-            yudu_sharingFunctions.shareFacebook();
-            yudu_commonFunctions.hideToolbar();
-        });
+        addSharingButton('facebook', yudu_sharingSettings.facebookIconPath, yudu_sharingFunctions.shareFacebook);
     }
 
     setSharingLeftPosition();
