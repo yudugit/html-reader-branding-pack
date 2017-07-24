@@ -794,10 +794,12 @@ var CarouselSegmentedControl = function(segmentedControls, settings) {
      */
     this.init = function() {
         this.iconSet.registerAsSegment(this);
+        var eventId = 'segmentedControl' + this.iconSet.label;
         this.element = $('<div></div>');
         this.element.text(this.iconSet.label);
+        this.element.attr('data-id', eventId);
         this.element.appendTo(this.parent.segmentControlContainer);
-        this.addListeners();
+        this.parent.carousel.registerListener(eventId, yudu_events.callback(this, this.handleClick));
     };
 
     /**
@@ -885,13 +887,6 @@ var CarouselSegmentedControl = function(segmentedControls, settings) {
      */
     this.handleClick = function() {
         this.parent.selectSegment(this);
-    };
-
-    /**
-     * Registers the event handlers for this segment
-     */
-    this.addListeners = function() {
-        this.element.on(yudu_commonSettings.clickAction, yudu_events.callback(this, this.handleClick));
     };
     //endregion
 
