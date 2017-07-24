@@ -202,7 +202,7 @@ var createButtonNoIcon = function(id, callback) {
     if (!yudu_commonSettings.isDesktop) {
         button.addClass('touchControl');
     }
-    button.on(yudu_commonSettings.clickAction, callback);
+    buttonCallbacks[id] = callback;
     newButton(id, button);
     button.insertBefore($('#rightControls'));
 };
