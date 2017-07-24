@@ -52,6 +52,10 @@ var Thumbnails = function(settings) {
     //  Note ideal dimensions for a portrait page will have a ratio roughly equal to 1:sqrt(2)
     this.iconSize = settings.initialIconSizes;
 
+    // event handling
+    this.callbacks = {};
+    this.carouselManager = null;
+
     this.isVisible = false;
     //endregion
 
@@ -96,6 +100,8 @@ var Thumbnails = function(settings) {
         yudu_events.subscribe(yudu_events.ALL, yudu_events.THUMBNAILS.TOGGLE_THUMBNAILS, yudu_events.callback(self, function(event) { self.toggle(event.data.toggle, event.data.show); }));
         yudu_events.subscribe(yudu_events.ALL, yudu_events.THUMBNAILS.UPDATE_THUMBNAIL, yudu_events.callback(self, function(event) { self.updateThumbnail(event.data.pageNumber); }));
 
+        this.carouselManager = yudu_commonFunctions.createHammerJSTapManager(this.carouselContainerElement[0]);
+        this.carouselManager.on('tap', yudu_events.callback(self, this.handleInteraction));
     };
 
     /**
@@ -526,6 +532,26 @@ var Thumbnails = function(settings) {
     //endregion
 
     //region event handlers
+    /**
+     * Callback for taps on the thumbnails popup
+     * @param event {*} fired by HammerJS, DOM event nested in `event.srcEvent`
+     */
+    this.handleInteraction = function(event) {
+        var elementId = event.target.dataset.id;
+        var callback = this.callbacks[elementId];
+        typeof callback == 'function' && callback(event);
+    };
+
+    /**
+     * Registers an event handler for an element with the specified ID
+     * @param id {string} to identify the callback for the element being activated
+     *  should be unique within this thumbnails namespace
+     * @param callback {Function} to trigger when the associated element is activated
+     */
+    this.registerListener = function(id, callback) {
+        this.callbacks[id] = callback;
+    };
+
     /**
      * Event handler (HTML Reader) to respond to a page change event
      * @param event
