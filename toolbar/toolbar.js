@@ -376,27 +376,56 @@ var initSharing = function() {
         }
     };
 
+    var sharingCallbacks = {};
+
+    /**
+     * Callback for taps on the sharing menu popup
+     * @param event {*} fired by HammerJS, DOM event nested in `event.srcEvent`
+     */
+    var handleSharingInteraction = function(event) {
+        var id = event.target.id;
+        if (id && sharingCallbacks[id] && typeof sharingCallbacks[id] == 'function') {
+            sharingCallbacks[id](event);
+        }
+    };
+
     sharingUI.dropdown.container.addClass(yudu_commonSettings.isDesktop ? "isDesktop" : "touchDevice");
+    var sharingManager = yudu_commonFunctions.createHammerJSTapManager(sharingUI.dropdown.container[0]);
+    sharingManager.on('tap', handleSharingInteraction);
+
     $(".noDrag").on("touchmove", function() {
         return false;
     });
 
     if (yudu_toolbarSettings.sharing.emailEnabled || yudu_toolbarSettings.sharing.twitter || yudu_toolbarSettings.sharing.facebook) {
-        sharingUI.dropdown.currentPage.on(yudu_commonSettings.clickAction, function() {
+        sharingCallbacks.currentPage = function() {
             toggleSharingPage(true);
-        });
-        sharingUI.dropdown.firstPage.on(yudu_commonSettings.clickAction, function() {
+        };
+        sharingCallbacks.firstPage = function() {
             toggleSharingPage(false);
-        });
+        };
     }
 
+    /**
+     * Helper that encapsulates creating and adding a button to the sharing popup
+     * @param id {string} of the element on page acting as a button and that will contain the image
+     * @param imgPath {string} URL of an image to use for the button
+     * @param callback {Function} to call when the button is activated
+     * Note the callback should expect a HammerJS event; the DOM event will be nested in `event.srcEvent`
+     */
+    var addSharingButton = function(id, imgPath, callback) {
+        var button = document.getElementById(id);
+        var icon = document.createElement('img');
+        icon.classList.add('noPointerEvents'); // prevent the icon capturing interactions: let them pass to the button
+        icon.src = imgPath;
+        button.insertBefore(icon, button.firstChild);
+        button.style.display = 'block';
+        sharingCallbacks[id] = callback;
+    };
+
     if (yudu_toolbarSettings.sharing.emailEnabled) {
-        var emailButton = $('#email');
-        var emailIcon = $('<img src="' + yudu_toolbarSettings.toolbarIconBasePath + 'email.png">');
-        emailButton.prepend(emailIcon);
-        emailButton.show();
-        emailButton.on(yudu_commonSettings.clickAction, function(event) {
-            event.stopPropagation();
+        addSharingButton('email', yudu_toolbarSettings.toolbarIconBasePath + 'email.png', function(event) {
+            event.srcEvent.stopPropagation();
             hideSharing();
             yudu_sharingFunctions.shareEmail();
             yudu_commonFunctions.hideToolbar();
@@ -405,11 +434,7 @@ var initSharing = function() {
     }
 
     if(yudu_toolbarSettings.sharing.twitter) {
-        var twitterButton = $("#twitter");
-        var twitterIcon = $('<img src="' + yudu_sharingSettings.twitterIconPath + '">');
-        twitterButton.prepend(twitterIcon);
-        twitterButton.show();
-        twitterButton.on(yudu_commonSettings.clickAction, function() {
+        addSharingButton('twitter', yudu_sharingSettings.twitterIconPath, function() {
             hideSharing();
             yudu_sharingFunctions.shareTwitter();
             yudu_commonFunctions.hideToolbar();
@@ -417,11 +442,7 @@ var initSharing = function() {
     }
 
     if(yudu_toolbarSettings.sharing.facebook) {
-        var facebookButton = $("#facebook");
-        var facebookIcon = $('<img src="' + yudu_sharingSettings.facebookIconPath + '">');
-        facebookButton.prepend(facebookIcon);
-        facebookButton.show();
-        facebookButton.on(yudu_commonSettings.clickAction, function() {
+        addSharingButton('facebook', yudu_sharingSettings.facebookIconPath, function() {
             hideSharing();
             yudu_sharingFunctions.shareFacebook();
             yudu_commonFunctions.hideToolbar();
