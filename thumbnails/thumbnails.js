@@ -7,6 +7,13 @@
  *      (Deleting the components but not calls to their creation will still throw exceptions)
  *  It may suffice for basic use to modify the settings at the very bottom, applied to the Thumbnails object on construction
  *  For further changes, please see in-line comments. Remember to thoroughly test any changes made.
+ *
+ * Note on event handling:
+ *  This script currently makes use of multiple versions of HammerJS
+ *  HammerJS version 1 is available as a jQuery plugin via `$.hammer`
+ *  HammerJS version 2 is available indirectly via `yudu_commonSettings.hammerjs`
+ *  Various helpers for constructing HammerJS2 Manager objects are available from `yudu_commonFunctions`
+ *      Please see the documentation for more information
  */
 
 var Thumbnails = function(settings) {
@@ -100,6 +107,7 @@ var Thumbnails = function(settings) {
         yudu_events.subscribe(yudu_events.ALL, yudu_events.THUMBNAILS.TOGGLE_THUMBNAILS, yudu_events.callback(self, function(event) { self.toggle(event.data.toggle, event.data.show); }));
         yudu_events.subscribe(yudu_events.ALL, yudu_events.THUMBNAILS.UPDATE_THUMBNAIL, yudu_events.callback(self, function(event) { self.updateThumbnail(event.data.pageNumber); }));
 
+        // create a HammerJS2 Manager
         this.carouselManager = yudu_commonFunctions.createHammerJSTapManager(this.carouselContainerElement[0]);
         this.carouselManager.on('tap', yudu_events.callback(self, this.handleInteraction));
     };
