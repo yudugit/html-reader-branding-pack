@@ -511,6 +511,7 @@ var hideSharing = function() {
  */
 var contentsShowing = false;
 var contentsUI = {};
+var contentsCallbacks = {};
 
 var initContents = function() {
     if (!yudu_contentsSettings.contentsData || yudu_contentsSettings.contentsData.length == 0) {
@@ -526,6 +527,23 @@ var initContents = function() {
             list: $('#contentsList')
         }
     };
+
+    /**
+     * Callback for taps on the contents menu popup
+     * @param event {*} fired by HammerJS, DOM event nested in `event.srcEvent`
+     */
+    var handleContentsInteraction = function(event) {
+        if (!event.target.classList.contains('contentsLink')) {
+            // not a link element
+            return;
+        }
+        var contentsId = event.target.dataset.id;
+        var callback = contentsId && contentsCallbacks[contentsId];
+        typeof callback == 'function' && callback(event);
+    };
+
+    var contentsManager = yudu_commonFunctions.createHammerJSTapManager(contentsUI.dropdown.list[0]);
+    contentsManager.on('tap', handleContentsInteraction);
 
     for (var i = 0, l = yudu_contentsSettings.contentsData.length; i < l; i++) {
         contentsUI.dropdown.list.append(renderContentsElement(yudu_contentsSettings.contentsData[i]));
@@ -545,20 +563,23 @@ var initContents = function() {
 };
 
 var renderContentsElement = function(contentsElementData) {
+    var contentsId = generateContentsId();
+
     var contentsElementDiv = $('<div></div>');
     contentsElementDiv.addClass('contentsElement');
 
     var contentsLink = $('<div></div>');
     contentsLink.addClass('contentsLink');
     contentsLink.html(contentsElementData.description);
+    contentsLink.attr('data-id', contentsId);
 
     var lineBreak = $('<hr>');
 
-    contentsLink.on('click', function() {
+    contentsCallbacks[contentsId] = function() {
         yudu_commonFunctions.goToPage(contentsElementData.page);
         hideContents();
         yudu_commonFunctions.hideToolbar();
-    });
+    };
 
     contentsElementDiv.append(contentsLink);
     contentsElementDiv.append(lineBreak);
@@ -571,6 +592,17 @@ var renderContentsElement = function(contentsElementData) {
 
     return contentsElementDiv;
 };
+
+/**
+ * Helper to generate a unique ID (intended for contents menu items) each time it is called
+ * Self-contained to prevent interference with the internal counter.
+ */
+var generateContentsId = (function() {
+    var contentsCounter = 0;
+    return function() {
+        return 'contentsItem' + (contentsCounter++);
+    };
+}());
 
 var toggleContentsAction = function() {
     if (toggleContents(true)) {
