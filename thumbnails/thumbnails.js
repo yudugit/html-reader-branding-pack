@@ -1615,7 +1615,8 @@ var Thumbnail = function(carousel, settings) {
     this.getLabel = function() {
         if (this.pageNumber == 0 && yudu_commonSettings.hasIntroPage) {
             return yudu_thumbnailsSettings.introString;
-        } else if (yudu_thumbnailsSettings.pagesDetails[this.pageDetailsIndex].label()) {
+        } else if (yudu_thumbnailsSettings.pagesDetails[this.pageDetailsIndex]
+                && yudu_thumbnailsSettings.pagesDetails[this.pageDetailsIndex].label()) {        
             var pageLabel = yudu_thumbnailsSettings.pagesDetails[this.pageDetailsIndex].label();
             var toLabel = pageLabel && this.carousel.intRegex.test(pageLabel)
                     ? yudu_thumbnailsSettings.pageString + ' '
