@@ -4,3 +4,4 @@
 *.min.js
 *.sourcemap.json
 *.css
+build/
