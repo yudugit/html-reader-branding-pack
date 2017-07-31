@@ -123,7 +123,8 @@ var Thumbnails = function(settings) {
                     height: iconSize.height
                 },
                 initialReaderOrientation: this.readerOrientation,
-                pageNumber: pageNumber
+                pageNumber: pageNumber,
+                pageDetailsIndex: i
             };
             thumbnailSettings.fileSrc = yudu_commonFunctions.returnFunctionWithDynamicArgs(yudu_thumbnailsFunctions.getThumbnailUrl, thumbnailSettings.filename);
             icons.push(new Thumbnail(this, thumbnailSettings));
@@ -1507,6 +1508,7 @@ var Thumbnail = function(carousel, settings) {
     this.fileWidth = settings.fileWidth;
     this.pageNumber = settings.pageNumber;
     this.readerOrientation = settings.initialReaderOrientation;
+    this.pageDetailsIndex = settings.pageDetailsIndex;
 
     this.dimensions = [];
     this.dimensions[settings.initialReaderOrientation] = settings.initialDimensions;
@@ -1613,8 +1615,9 @@ var Thumbnail = function(carousel, settings) {
     this.getLabel = function() {
         if (this.pageNumber == 0 && yudu_commonSettings.hasIntroPage) {
             return yudu_thumbnailsSettings.introString;
-        } else if (yudu_thumbnailsSettings.pagesDetails[this.pageNumber - 1].label()) {
-            var pageLabel = yudu_thumbnailsSettings.pagesDetails[this.pageNumber - 1].label();
+        } else if (yudu_thumbnailsSettings.pagesDetails[this.pageDetailsIndex]
+                && yudu_thumbnailsSettings.pagesDetails[this.pageDetailsIndex].label()) {        
+            var pageLabel = yudu_thumbnailsSettings.pagesDetails[this.pageDetailsIndex].label();
             var toLabel = pageLabel && this.carousel.intRegex.test(pageLabel)
                     ? yudu_thumbnailsSettings.pageString + ' '
                     : '';
