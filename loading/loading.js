@@ -5,8 +5,12 @@ var fadeLoadingScreenDuration = 300;
 
 //Initialises loading screen
 var loadingInit = function(){
-    displayLoadingPage();
+    if (yudu_loadingSettings.loaded === true) {
+        // if the Reader has already loaded, terminate early
+        endLoading();
+    }
     registerForEvents();
+    displayLoadingPage();
 };
 
 //Sets loading screen background and displays page
@@ -14,7 +18,9 @@ var displayLoadingPage = function(){
     // Sets a gradient background if bgTopColour and bgBottomColour have been defined either as configuration items in
     // loadingConfig or as branding settings in Publisher. Configuration items in loadingConfig will take priority.
     yudu_loadingFunctions.setGradientBackground(element, yudu_loadingSettings);
-    progressText.text(yudu_loadingSettings.loadingString + " 0%");
+    // check for any initial progress made while loading this page
+    var progressSoFar = parseInt(yudu_loadingSettings.lastProgressReport) || 0;
+    updateProgressBar(progressSoFar);
     element.show();
 };
 
@@ -25,7 +31,11 @@ var registerForEvents = function(){
 
 var displayProgress = function(event) {
     var percentage = event.data.percentage;
-    progressText.text(yudu_loadingSettings.loadingString + " " + parseInt(percentage) + "%");
+    updateProgressBar(parseInt(percentage));
+};
+
+var updateProgressBar = function(percentage) {
+    progressText.text(yudu_loadingSettings.loadingString + " " + percentage + "%");
     progressBar.style.width = percentage + "%";
 };
 
