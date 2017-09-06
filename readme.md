@@ -278,6 +278,9 @@ Its two components will be available as the following global variables:
 + `orientation` – the orientation of the device: `landscape = 0`, `portrait = 1`
 + `hasIntroPage` – `true` if the edition was set up with an intro page, `false` otherwise
 + `createjs` – the "easel" library module
++ `hammerjs` – version 2 of the "HammerJS" library module
++ `hammerJSRecogniserPresets` - a hash of `Hammer.Recognizer` presets compatible with HammerJS2; currently contains:
+    + `TAP_ONLY` - a recogniser preset that will initialise a manager with only a `Hammer.Tap` `Recognizer` when used
 
 #### Common Functions
 
@@ -298,6 +301,9 @@ Its two components will be available as the following global variables:
 + `enableScrollingWithoutDocumentBouncing(element)` – use on touch devices only for scrollable elements to disable the bouncing of the entire document when scrolling to the beginning/end on iOS
 + `toolbarFinishedLoading` – call this after the toolbar submodule has finished loading
     + __NOT__ optional, as it sets `yudu_commonSettings.toolbarLoaded`, which is used by the core
++ `createHammerJSManagerWithRecognisers` - helper that takes an array of `Hammer.Recognizer`s and an element to create a `Manager` for, and returns the manager
++ `createHammerJSManagerWithOptions` - helper that takes an element to create a `Hammer.Manager` for, and an arbitrary object with HammerJS options, and returns the manager
++ `createHammerJSTapManager` - helper that takes an element to create a `Hammer.Manager` for, and returns a manager pre-initialised with only a `Hammer.Tap` `Recognizer`
 + `goToPage(pageNumber)` – call to jump to the page numbered `pageNumber`
 
 ### Contents

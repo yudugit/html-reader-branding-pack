@@ -7,6 +7,13 @@
  *      (Deleting the components but not calls to their creation will still throw exceptions)
  *  It may suffice for basic use to modify the settings at the very bottom, applied to the Thumbnails object on construction
  *  For further changes, please see in-line comments. Remember to thoroughly test any changes made.
+ *
+ * Note on event handling:
+ *  This script currently makes use of multiple versions of HammerJS
+ *  HammerJS version 1 is available as a jQuery plugin via `$.hammer`
+ *  HammerJS version 2 is available indirectly via `yudu_commonSettings.hammerjs`
+ *  Various helpers for constructing HammerJS2 Manager objects are available from `yudu_commonFunctions`
+ *      Please see the documentation for more information
  */
 
 var Thumbnails = function(settings) {
@@ -52,6 +59,10 @@ var Thumbnails = function(settings) {
     //  Note ideal dimensions for a portrait page will have a ratio roughly equal to 1:sqrt(2)
     this.iconSize = settings.initialIconSizes;
 
+    // event handling
+    this.callbacks = {};
+    this.carouselManager = null;
+
     this.isVisible = false;
     //endregion
 
@@ -96,6 +107,9 @@ var Thumbnails = function(settings) {
         yudu_events.subscribe(yudu_events.ALL, yudu_events.THUMBNAILS.TOGGLE_THUMBNAILS, yudu_events.callback(self, function(event) { self.toggle(event.data.toggle, event.data.show); }));
         yudu_events.subscribe(yudu_events.ALL, yudu_events.THUMBNAILS.UPDATE_THUMBNAIL, yudu_events.callback(self, function(event) { self.updateThumbnail(event.data.pageNumber); }));
 
+        // create a HammerJS2 Manager
+        this.carouselManager = yudu_commonFunctions.createHammerJSTapManager(this.carouselContainerElement[0]);
+        this.carouselManager.on('tap', yudu_events.callback(self, this.handleInteraction));
     };
 
     /**
@@ -528,6 +542,26 @@ var Thumbnails = function(settings) {
 
     //region event handlers
     /**
+     * Callback for taps on the thumbnails popup
+     * @param event {*} fired by HammerJS, DOM event nested in `event.srcEvent`
+     */
+    this.handleInteraction = function(event) {
+        var elementId = event.target.dataset.id;
+        var callback = this.callbacks[elementId];
+        typeof callback == 'function' && callback(event);
+    };
+
+    /**
+     * Registers an event handler for an element with the specified ID
+     * @param id {string} to identify the callback for the element being activated
+     *  should be unique within this thumbnails namespace
+     * @param callback {Function} to trigger when the associated element is activated
+     */
+    this.registerListener = function(id, callback) {
+        this.callbacks[id] = callback;
+    };
+
+    /**
      * Event handler (HTML Reader) to respond to a page change event
      * @param event
      */
@@ -769,10 +803,12 @@ var CarouselSegmentedControl = function(segmentedControls, settings) {
      */
     this.init = function() {
         this.iconSet.registerAsSegment(this);
+        var eventId = 'segmentedControl' + this.iconSet.label;
         this.element = $('<div></div>');
         this.element.text(this.iconSet.label);
+        this.element.attr('data-id', eventId);
         this.element.appendTo(this.parent.segmentControlContainer);
-        this.addListeners();
+        this.parent.carousel.registerListener(eventId, yudu_events.callback(this, this.handleClick));
     };
 
     /**
@@ -860,13 +896,6 @@ var CarouselSegmentedControl = function(segmentedControls, settings) {
      */
     this.handleClick = function() {
         this.parent.selectSegment(this);
-    };
-
-    /**
-     * Registers the event handlers for this segment
-     */
-    this.addListeners = function() {
-        this.element.on(yudu_commonSettings.clickAction, yudu_events.callback(this, this.handleClick));
     };
     //endregion
 
