@@ -162,6 +162,10 @@ var createButtons = function() {
         createButton('shoppingCart', buttonOtherThanTogglableHit(this, yudu_toolbarFunctions.shoppingCartClicked), highResIcons);
         buttons['shoppingCart'].append(numberOfProductsSpan);
     }
+    if (yudu_toolbarSettings.editionLaunchableHtmlEnabled) {
+        createButton('editionLaunchableHtml',
+                buttonOtherThanTogglableHit(this, yudu_toolbarFunctions.editionLaunchableHtmlClicked, highResIcons));
+    }
 
 
     // if not logged into a protected edition, phoneview should not be available yet
