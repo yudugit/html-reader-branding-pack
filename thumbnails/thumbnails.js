@@ -348,6 +348,7 @@ var Thumbnails = function(settings) {
         this.isVisible = shouldShow;
         if (shouldShow) {
             this.segmentedControl.updateAllSegments();
+            yudu_commonFunctions.decryptAllPages();
             this.displayPage(yudu_thumbnailsFunctions.getCurrentPage());
             yudu_commonFunctions.hideToolbar();
             this.carouselContainerElement.show();
