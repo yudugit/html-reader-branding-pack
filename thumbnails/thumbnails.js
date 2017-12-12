@@ -125,7 +125,7 @@ var Thumbnails = function(settings) {
             //  since intro page will be 0-indexed, fine
             //  no intro page => need to remember to offset for page numbering
             var pageNumber = i + this.pageIndexOffset;
-            var iconSize = this.getIconDimensionsFromFileDimensions(page.width(), page.height());
+            var iconSize = this.getIconDimensionsFromFileDimensions(page.width(), page.height(), this.readerOrientation);
             var thumbnailSettings = {
                 id: pageNumber,
                 filename: yudu_commonFunctions.returnFunctionWithDynamicArgs(yudu_thumbnailsFunctions.getThumbnailFileName, i),
@@ -226,17 +226,26 @@ var Thumbnails = function(settings) {
             if (this.primaryIconSets.hasOwnProperty(iconSetId)) {
                 var icons = this.primaryIconSets[iconSetId].__original_icons;
                 for (var i = 0; i < icons.length; i++) {
-                    var iconSize = this.getIconDimensionsFromFileDimensions(icons[i].getFileWidth(), icons[i].getFileHeight());
-                    icons[i].initOrientation(
-                            this.readerOrientation,
-                            {
-                                width: iconSize.width,
-                                height: iconSize.height
-                            }
-                    );
+                    this.updateSingleIconSize(icons[i], this.readerOrientation);
                 }
             }
         }
+    };
+
+    /**
+     * Calculate and update a single icon's size for the specified orientation
+     * @param icon to update the size of
+     * @param orientation of the window to update the icon's size for
+     */
+    this.updateSingleIconSize = function(icon, orientation) {
+        var iconSize = this.getIconDimensionsFromFileDimensions(icon.getFileWidth(), icon.getFileHeight(), orientation);
+        icon.initOrientation(
+                this.readerOrientation,
+                {
+                    width: iconSize.width,
+                    height: iconSize.height
+                }
+        );
     };
 
     /**
@@ -332,14 +341,15 @@ var Thumbnails = function(settings) {
      * For the current orientation returns the icon dimensions
      * @param fileWidth width of file the icon represents
      * @param fileHeight width of file the icon represents
+     * @param orientation of the window to calculate icon dimensions for
      * @returns {{width: number, height: number}}
      */
-    this.getIconDimensionsFromFileDimensions = function(fileWidth, fileHeight) {
+    this.getIconDimensionsFromFileDimensions = function(fileWidth, fileHeight, orientation) {
         // calculate a scaling ratio for the icon size
         //  take a ceiling so that the calculated size will always be less than the limit
         //  the */ by 1000 is so that less accuracy is lost by the approximation
-        var widthRatio = fileWidth / this.iconSize[this.readerOrientation].iconWidthLimit;
-        var heightRatio = fileHeight / this.iconSize[this.readerOrientation].iconHeightLimit;
+        var widthRatio = fileWidth / this.iconSize[orientation].iconWidthLimit;
+        var heightRatio = fileHeight / this.iconSize[orientation].iconHeightLimit;
         var ratio = Math.ceil(1000 * Math.max(widthRatio, heightRatio)) / 1000;
         return {
             width: Math.round( fileWidth / ratio ),
