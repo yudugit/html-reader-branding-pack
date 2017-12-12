@@ -519,7 +519,17 @@ var Thumbnails = function(settings) {
      */
     this.updateThumbnail = function(pageIndex) {
         if (0 <= pageIndex && pageIndex < this.iconsLength()) {
-            this.icons()[pageIndex].setImage();
+            var icon = this.icons()[pageIndex];
+            // update the icon image URL
+            icon.setImage();
+            // update the icon sizes (in case the thumbnails pre- and post-decryption were differently sized
+            for (var i = 0; i < this.readerOrientationInit.length; i++) {
+                if (this.readerOrientationInit[i]) {
+                    this.updateSingleIconSize(icon, i);
+                }
+            }
+            // update the visible element's size
+            icon.setSize();
         }
     };
 
