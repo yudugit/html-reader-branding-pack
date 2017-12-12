@@ -240,7 +240,7 @@ var Thumbnails = function(settings) {
     this.updateSingleIconSize = function(icon, orientation) {
         var iconSize = this.getIconDimensionsFromFileDimensions(icon.getFileWidth(), icon.getFileHeight(), orientation);
         icon.initOrientation(
-                this.readerOrientation,
+                orientation,
                 {
                     width: iconSize.width,
                     height: iconSize.height
