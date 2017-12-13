@@ -1600,6 +1600,9 @@ var Thumbnail = function(carousel, settings) {
      * Sets the size/position of the html / dom elements
      */
     this.setSize = function() {
+        if(!this.initialised) {
+            return;
+        }
         this.htmlElement.style.width = this.dimensions[this.readerOrientation].width + "px";
         this.htmlElement.style.height = this.dimensions[this.readerOrientation].height + "px";
 
