@@ -13,6 +13,7 @@ apply plugin: 'css'
 def subProjects = ['toolbar', 'thumbnails', 'loading', 'drawingToolbars']
 def minificationTasks = []
 def compilationTasks = []
+def cleaningTasks = []
 
 subProjects.each { name ->
     // create JavaScript minification tasks for each of the customisable parts of this branding pack
@@ -42,6 +43,20 @@ subProjects.each { name ->
         dest = file("${name}/")
     }
     compilationTasks.add(tasks["compile${name.capitalize()}Css"])
+
+    // create cleaning tasks to undo any in-place changes
+    task "clean${name.capitalize()}"(type: Delete) {
+        group = 'Branding Pack Cleaning'
+        description "Cleans up modified and transitional files for ${name}"
+        delete "${name}/${name}.min.js"
+        delete "${name}/style.css"
+        delete "${name}/${name}.min.sourcemap.json"
+        doLast {
+            // reverse the config changes: they should reference the non-minified JavaScript source, not the minified
+            ant.replace(file: "${name}/${name}Config.json", token: "${name}/${name}.min.js", value: "${name}/${name}.js")
+        }
+    }
+    cleaningTasks.add(tasks["clean${name.capitalize()}"])
 }
 
 // minifies all the JavaScript in this project by depending on the dynamic minification tasks created above
@@ -65,17 +80,51 @@ task build(dependsOn: [minifyAllJs, compileAllCss]) {
     description = 'Minifies the JavaScript files and compiles the LESS files for all parts of the branding pack'
 }
 
-task clean {
+task cleanSubmodules {
     group = 'Branding Pack Build'
-    description = 'Cleans up all the output files from the build scripts'
-    subProjects.each { name ->
-        file("${name}/${name}.min.js").delete()
-        file("${name}/style.css").delete()
-        file("${name}/${name}.min.sourcemap.json").delete()
-        // reverse the update of the config file so that it references the non-minified JavaScript source not the
-        // minified version
-        ant.replace(file: "${name}/${name}Config.json", token: "${name}/${name}.min.js", value: "${name}/${name}.js")
-    }
+    description = 'Cleans up all modified and transitional files from the build scripts'
+    // depend on all the cleaning tasks
+    dependsOn = cleaningTasks
+}
+
+task cleanBuild(type: Delete) {
+    group = 'Branding Pack Build'
+    description = 'Cleans up the output build folder'
+    delete 'build'
+}
+
+// builds the pack then copies the assets into a `build` folder
+task copyBrandingPack(type: Copy, dependsOn: [cleanBuild, build]) {
+    group = 'Branding Pack Build'
+    description = "Copy the built branding pack files into a separate build folder"
+    build.mustRunAfter cleanBuild
+    from "./"
+    include 'loading/'
+    exclude 'loading/loading.js'
+    include 'thumbnails/'
+    exclude 'thumbnails/thumbnails.js'
+    include 'toolbar/'
+    exclude 'toolbar/toolbar.js'
+    include 'drawingToolbars/'
+    exclude 'drawingToolbars/drawingToolbars.js'
+    include 'artwork/'
+    include 'info/'
+    include 'rollovers/'
+    include 'phoneview/'
+    include 'customStringsPack.json/'
+    include 'logo.png'
+    include 'placeholder.png'
+    // exclude all sourcemap files
+    exclude '**/*.min.sourcemap.json'
+    // exclude all less files
+    exclude '**/*.less'
+    into 'build/'
+}
+
+task prepareBrandingPack(type: Copy, dependsOn: [copyBrandingPack, cleanSubmodules]) {
+    group = 'Branding Pack Build'
+    description = "Coordinate copying the built pack and cleaning modified files"
+    cleanSubmodules.mustRunAfter copyBrandingPack
 }
 
 task wrapper(type: Wrapper) {

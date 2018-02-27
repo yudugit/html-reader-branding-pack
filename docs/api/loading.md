@@ -17,6 +17,10 @@ Its two components will be available as the following global variables:
     + used as the "bottom" anchor in a linear gradient
     + if not specified, uses the value applied to the edition in its Branding Settings prior to publishing, or else defaults to black
 + `loadingString` - a descriptive (localised) string that can be used to label the loading bar
++ `lastProgressReport` - number between 0 and 100 (inclusive) with the last progress report made
+    + useful for setting initial state in case progress is made prior to the loading script being evaluated
++ `loaded` - boolean flag indicating whether the Reader has finished loading
+    + useful for checking if the Reader finished loading prior to the loading script being evaluated
 
 ## Loading Functions
 

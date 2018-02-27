@@ -7,6 +7,13 @@
  *      (Deleting the components but not calls to their creation will still throw exceptions)
  *  It may suffice for basic use to modify the settings at the very bottom, applied to the Thumbnails object on construction
  *  For further changes, please see in-line comments. Remember to thoroughly test any changes made.
+ *
+ * Note on event handling:
+ *  This script currently makes use of multiple versions of HammerJS
+ *  HammerJS version 1 is available as a jQuery plugin via `$.hammer`
+ *  HammerJS version 2 is available indirectly via `yudu_commonSettings.hammerjs`
+ *  Various helpers for constructing HammerJS2 Manager objects are available from `yudu_commonFunctions`
+ *      Please see the documentation for more information
  */
 
 var Thumbnails = function(settings) {
@@ -52,6 +59,10 @@ var Thumbnails = function(settings) {
     //  Note ideal dimensions for a portrait page will have a ratio roughly equal to 1:sqrt(2)
     this.iconSize = settings.initialIconSizes;
 
+    // event handling
+    this.callbacks = {};
+    this.carouselManager = null;
+
     this.isVisible = false;
     //endregion
 
@@ -96,6 +107,9 @@ var Thumbnails = function(settings) {
         yudu_events.subscribe(yudu_events.ALL, yudu_events.THUMBNAILS.TOGGLE_THUMBNAILS, yudu_events.callback(self, function(event) { self.toggle(event.data.toggle, event.data.show); }));
         yudu_events.subscribe(yudu_events.ALL, yudu_events.THUMBNAILS.UPDATE_THUMBNAIL, yudu_events.callback(self, function(event) { self.updateThumbnail(event.data.pageNumber); }));
 
+        // create a HammerJS2 Manager
+        this.carouselManager = yudu_commonFunctions.createHammerJSTapManager(this.carouselContainerElement[0]);
+        this.carouselManager.on('tap', yudu_events.callback(self, this.handleInteraction));
     };
 
     /**
@@ -111,7 +125,7 @@ var Thumbnails = function(settings) {
             //  since intro page will be 0-indexed, fine
             //  no intro page => need to remember to offset for page numbering
             var pageNumber = i + this.pageIndexOffset;
-            var iconSize = this.getIconDimensionsFromFileDimensions(page.width(), page.height());
+            var iconSize = this.getIconDimensionsFromFileDimensions(page.width(), page.height(), this.readerOrientation);
             var thumbnailSettings = {
                 id: pageNumber,
                 filename: yudu_commonFunctions.returnFunctionWithDynamicArgs(yudu_thumbnailsFunctions.getThumbnailFileName, i),
@@ -123,7 +137,8 @@ var Thumbnails = function(settings) {
                     height: iconSize.height
                 },
                 initialReaderOrientation: this.readerOrientation,
-                pageNumber: pageNumber
+                pageNumber: pageNumber,
+                pageDetailsIndex: i
             };
             thumbnailSettings.fileSrc = yudu_commonFunctions.returnFunctionWithDynamicArgs(yudu_thumbnailsFunctions.getThumbnailUrl, thumbnailSettings.filename);
             icons.push(new Thumbnail(this, thumbnailSettings));
@@ -211,17 +226,26 @@ var Thumbnails = function(settings) {
             if (this.primaryIconSets.hasOwnProperty(iconSetId)) {
                 var icons = this.primaryIconSets[iconSetId].__original_icons;
                 for (var i = 0; i < icons.length; i++) {
-                    var iconSize = this.getIconDimensionsFromFileDimensions(icons[i].getFileWidth(), icons[i].getFileHeight());
-                    icons[i].initOrientation(
-                            this.readerOrientation,
-                            {
-                                width: iconSize.width,
-                                height: iconSize.height
-                            }
-                    );
+                    this.updateSingleIconSize(icons[i], this.readerOrientation);
                 }
             }
         }
+    };
+
+    /**
+     * Calculate and update a single icon's size for the specified orientation
+     * @param icon to update the size of
+     * @param orientation of the window to update the icon's size for
+     */
+    this.updateSingleIconSize = function(icon, orientation) {
+        var iconSize = this.getIconDimensionsFromFileDimensions(icon.getFileWidth(), icon.getFileHeight(), orientation);
+        icon.initOrientation(
+                orientation,
+                {
+                    width: iconSize.width,
+                    height: iconSize.height
+                }
+        );
     };
 
     /**
@@ -317,14 +341,15 @@ var Thumbnails = function(settings) {
      * For the current orientation returns the icon dimensions
      * @param fileWidth width of file the icon represents
      * @param fileHeight width of file the icon represents
+     * @param orientation of the window to calculate icon dimensions for
      * @returns {{width: number, height: number}}
      */
-    this.getIconDimensionsFromFileDimensions = function(fileWidth, fileHeight) {
+    this.getIconDimensionsFromFileDimensions = function(fileWidth, fileHeight, orientation) {
         // calculate a scaling ratio for the icon size
         //  take a ceiling so that the calculated size will always be less than the limit
         //  the */ by 1000 is so that less accuracy is lost by the approximation
-        var widthRatio = fileWidth / this.iconSize[this.readerOrientation].iconWidthLimit;
-        var heightRatio = fileHeight / this.iconSize[this.readerOrientation].iconHeightLimit;
+        var widthRatio = fileWidth / this.iconSize[orientation].iconWidthLimit;
+        var heightRatio = fileHeight / this.iconSize[orientation].iconHeightLimit;
         var ratio = Math.ceil(1000 * Math.max(widthRatio, heightRatio)) / 1000;
         return {
             width: Math.round( fileWidth / ratio ),
@@ -347,6 +372,7 @@ var Thumbnails = function(settings) {
         this.isVisible = shouldShow;
         if (shouldShow) {
             this.segmentedControl.updateAllSegments();
+            yudu_commonFunctions.decryptAllPages();
             this.displayPage(yudu_thumbnailsFunctions.getCurrentPage());
             yudu_commonFunctions.hideToolbar();
             this.carouselContainerElement.show();
@@ -494,7 +520,17 @@ var Thumbnails = function(settings) {
      */
     this.updateThumbnail = function(pageIndex) {
         if (0 <= pageIndex && pageIndex < this.iconsLength()) {
-            this.icons()[pageIndex].setImage();
+            var icon = this.icons()[pageIndex];
+            // update the icon image URL
+            icon.setImage();
+            // update the icon sizes (in case the thumbnails pre- and post-decryption were differently sized
+            for (var i = 0; i < this.readerOrientationInit.length; i++) {
+                if (this.readerOrientationInit[i]) {
+                    this.updateSingleIconSize(icon, i);
+                }
+            }
+            // update the visible element's size
+            icon.setSize();
         }
     };
 
@@ -526,6 +562,26 @@ var Thumbnails = function(settings) {
     //endregion
 
     //region event handlers
+    /**
+     * Callback for taps on the thumbnails popup
+     * @param event {*} fired by HammerJS, DOM event nested in `event.srcEvent`
+     */
+    this.handleInteraction = function(event) {
+        var elementId = event.target.dataset.id;
+        var callback = this.callbacks[elementId];
+        typeof callback == 'function' && callback(event);
+    };
+
+    /**
+     * Registers an event handler for an element with the specified ID
+     * @param id {string} to identify the callback for the element being activated
+     *  should be unique within this thumbnails namespace
+     * @param callback {Function} to trigger when the associated element is activated
+     */
+    this.registerListener = function(id, callback) {
+        this.callbacks[id] = callback;
+    };
+
     /**
      * Event handler (HTML Reader) to respond to a page change event
      * @param event
@@ -768,10 +824,12 @@ var CarouselSegmentedControl = function(segmentedControls, settings) {
      */
     this.init = function() {
         this.iconSet.registerAsSegment(this);
+        var eventId = 'segmentedControl' + this.iconSet.label;
         this.element = $('<div></div>');
         this.element.text(this.iconSet.label);
+        this.element.attr('data-id', eventId);
         this.element.appendTo(this.parent.segmentControlContainer);
-        this.addListeners();
+        this.parent.carousel.registerListener(eventId, yudu_events.callback(this, this.handleClick));
     };
 
     /**
@@ -859,13 +917,6 @@ var CarouselSegmentedControl = function(segmentedControls, settings) {
      */
     this.handleClick = function() {
         this.parent.selectSegment(this);
-    };
-
-    /**
-     * Registers the event handlers for this segment
-     */
-    this.addListeners = function() {
-        this.element.on(yudu_commonSettings.clickAction, yudu_events.callback(this, this.handleClick));
     };
     //endregion
 
@@ -1507,6 +1558,7 @@ var Thumbnail = function(carousel, settings) {
     this.fileWidth = settings.fileWidth;
     this.pageNumber = settings.pageNumber;
     this.readerOrientation = settings.initialReaderOrientation;
+    this.pageDetailsIndex = settings.pageDetailsIndex;
 
     this.dimensions = [];
     this.dimensions[settings.initialReaderOrientation] = settings.initialDimensions;
@@ -1548,6 +1600,9 @@ var Thumbnail = function(carousel, settings) {
      * Sets the size/position of the html / dom elements
      */
     this.setSize = function() {
+        if(!this.initialised) {
+            return;
+        }
         this.htmlElement.style.width = this.dimensions[this.readerOrientation].width + "px";
         this.htmlElement.style.height = this.dimensions[this.readerOrientation].height + "px";
 
@@ -1613,8 +1668,9 @@ var Thumbnail = function(carousel, settings) {
     this.getLabel = function() {
         if (this.pageNumber == 0 && yudu_commonSettings.hasIntroPage) {
             return yudu_thumbnailsSettings.introString;
-        } else if (yudu_thumbnailsSettings.pagesDetails[this.pageNumber - 1].label()) {
-            var pageLabel = yudu_thumbnailsSettings.pagesDetails[this.pageNumber - 1].label();
+        } else if (yudu_thumbnailsSettings.pagesDetails[this.pageDetailsIndex]
+                && yudu_thumbnailsSettings.pagesDetails[this.pageDetailsIndex].label()) {        
+            var pageLabel = yudu_thumbnailsSettings.pagesDetails[this.pageDetailsIndex].label();
             var toLabel = pageLabel && this.carousel.intRegex.test(pageLabel)
                     ? yudu_thumbnailsSettings.pageString + ' '
                     : '';

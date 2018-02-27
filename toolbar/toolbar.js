@@ -1,5 +1,6 @@
 var controls = $('#controls');
 var buttons = {};
+var buttonCallbacks = {};
 var visibleButtons = {
     __yudu_count: 0
 };
@@ -85,6 +86,7 @@ var createBar = function() {
         controls.addClass('touchDevice');
     }
     createButtons();
+    addButtonListener();
 };
 
 var showLogo = function() {
@@ -160,6 +162,10 @@ var createButtons = function() {
         createButton('shoppingCart', buttonOtherThanTogglableHit(this, yudu_toolbarFunctions.shoppingCartClicked), highResIcons);
         buttons['shoppingCart'].append(numberOfProductsSpan);
     }
+    if (yudu_toolbarSettings.editionLaunchableHtmlEnabled) {
+        createButton('editionLaunchableHtml',
+                buttonOtherThanTogglableHit(this, yudu_toolbarFunctions.editionLaunchableHtmlClicked, highResIcons));
+    }
 
 
     // if not logged into a protected edition, phoneview should not be available yet
@@ -190,7 +196,7 @@ var createButton = function(id, callback, highResIcons) {
         button.addClass('touchControl');
     }
     button.css('background-image', 'url(' + iconPath + ')');
-    button.on(yudu_commonSettings.clickAction, callback);
+    buttonCallbacks[id] = callback;
     newButton(id, button);
     button.insertBefore($('#rightControls'));
 };
@@ -200,7 +206,7 @@ var createButtonNoIcon = function(id, callback) {
     if (!yudu_commonSettings.isDesktop) {
         button.addClass('touchControl');
     }
-    button.on(yudu_commonSettings.clickAction, callback);
+    buttonCallbacks[id] = callback;
     newButton(id, button);
     button.insertBefore($('#rightControls'));
 };
@@ -246,6 +252,30 @@ var getIconFor = function(id, highResIcons) {
     return yudu_toolbarSettings.toolbarIconBasePath
             + (highResIcons ? yudu_toolbarSettings.iconHighResPrefix : '')
             + id + yudu_toolbarSettings.iconFileExtension;
+};
+
+/**
+ * Add a listener for tap events to the toolbar
+ * Defers button check to the event handler, so that one handler manages all buttons
+ */
+var addButtonListener = function() {
+    var controlsManager = yudu_commonFunctions.createHammerJSTapManager(controls[0]);
+    controlsManager.on('tap', handleButtonPress);
+};
+
+/**
+ * Callback for tap events on the toolbar
+ * Checks if a button was pressed, and if so, activates its associated callback
+ * @param event {*} fired by HammerJS, DOM event nested in `event.srcEvent`
+ */
+var handleButtonPress = function(event) {
+    var element = event.target;
+    if (element && element.id) {
+        var callback = buttonCallbacks[element.id];
+        if (typeof callback == 'function') {
+            callback();
+        }
+    }
 };
 
 /**
@@ -350,56 +380,76 @@ var initSharing = function() {
         }
     };
 
+    var sharingCallbacks = {};
+
+    /**
+     * Callback for taps on the sharing menu popup
+     * @param event {*} fired by HammerJS, DOM event nested in `event.srcEvent`
+     */
+    var handleSharingInteraction = function(event) {
+        var id = event.target.id;
+        if (id && sharingCallbacks[id] && typeof sharingCallbacks[id] == 'function') {
+            sharingCallbacks[id](event);
+        }
+    };
+
     sharingUI.dropdown.container.addClass(yudu_commonSettings.isDesktop ? "isDesktop" : "touchDevice");
+    var sharingManager = yudu_commonFunctions.createHammerJSTapManager(sharingUI.dropdown.container[0]);
+    sharingManager.on('tap', handleSharingInteraction);
+
     $(".noDrag").on("touchmove", function() {
         return false;
     });
 
     if (yudu_toolbarSettings.sharing.emailEnabled || yudu_toolbarSettings.sharing.twitter || yudu_toolbarSettings.sharing.facebook) {
-        sharingUI.dropdown.currentPage.on(yudu_commonSettings.clickAction, function() {
+        sharingCallbacks.currentPage = function() {
             toggleSharingPage(true);
-        });
-        sharingUI.dropdown.firstPage.on(yudu_commonSettings.clickAction, function() {
+        };
+        sharingCallbacks.firstPage = function() {
             toggleSharingPage(false);
-        });
+        };
     }
 
-    if (yudu_toolbarSettings.sharing.emailEnabled) {
-        var emailButton = $('#email');
-        var emailIcon = $('<img src="' + yudu_toolbarSettings.toolbarIconBasePath + 'email.png">');
-        emailButton.prepend(emailIcon);
-        emailButton.show();
-        emailButton.on(yudu_commonSettings.clickAction, function(event) {
-            event.stopPropagation();
+    /**
+     * Helper that encapsulates creating and adding a button to the sharing popup
+     * @param id {string} of the element on page acting as a button and that will contain the image
+     * @param imgPath {string} URL of an image to use for the button
+     * @param callback {Function} to call when the button is activated
+     */
+    var addSharingButton = function(id, imgPath, callback) {
+        var button = document.getElementById(id);
+        var icon = document.createElement('img');
+        icon.classList.add('noPointerEvents'); // prevent the icon capturing interactions: let them pass to the button
+        icon.src = imgPath;
+        button.insertBefore(icon, button.firstChild);
+        button.style.display = 'block';
+        sharingCallbacks[id] = sharingCallback(callback);
+    };
+
+    /**
+     * Create a callback for when a sharing button is activated
+     * Wraps a callback in shared code to manage the UI changes
+     * @param buttonCallback {Function} that triggers any unique behaviour assigned to the button
+     * @returns {Function} that expects a HammerJS event, and passes it on
+     */
+    var sharingCallback = function(buttonCallback) {
+        return function(event) {
             hideSharing();
-            yudu_sharingFunctions.shareEmail();
+            typeof buttonCallback == 'function' && buttonCallback(event);
             yudu_commonFunctions.hideToolbar();
-            return false;
-        });
+        }
+    };
+
+    if (yudu_toolbarSettings.sharing.emailEnabled) {
+        addSharingButton('email', yudu_toolbarSettings.toolbarIconBasePath + 'email.png', yudu_sharingFunctions.shareEmail);
     }
 
     if(yudu_toolbarSettings.sharing.twitter) {
-        var twitterButton = $("#twitter");
-        var twitterIcon = $('<img src="' + yudu_sharingSettings.twitterIconPath + '">');
-        twitterButton.prepend(twitterIcon);
-        twitterButton.show();
-        twitterButton.on(yudu_commonSettings.clickAction, function() {
-            hideSharing();
-            yudu_sharingFunctions.shareTwitter();
-            yudu_commonFunctions.hideToolbar();
-        });
+        addSharingButton('twitter', yudu_sharingSettings.twitterIconPath, yudu_sharingFunctions.shareTwitter);
     }
 
     if(yudu_toolbarSettings.sharing.facebook) {
-        var facebookButton = $("#facebook");
-        var facebookIcon = $('<img src="' + yudu_sharingSettings.facebookIconPath + '">');
-        facebookButton.prepend(facebookIcon);
-        facebookButton.show();
-        facebookButton.on(yudu_commonSettings.clickAction, function() {
-            hideSharing();
-            yudu_sharingFunctions.shareFacebook();
-            yudu_commonFunctions.hideToolbar();
-        });
+        addSharingButton('facebook', yudu_sharingSettings.facebookIconPath, yudu_sharingFunctions.shareFacebook);
     }
 
     setSharingLeftPosition();
@@ -465,6 +515,7 @@ var hideSharing = function() {
  */
 var contentsShowing = false;
 var contentsUI = {};
+var contentsCallbacks = {};
 
 var initContents = function() {
     if (!yudu_contentsSettings.contentsData || yudu_contentsSettings.contentsData.length == 0) {
@@ -480,6 +531,23 @@ var initContents = function() {
             list: $('#contentsList')
         }
     };
+
+    /**
+     * Callback for taps on the contents menu popup
+     * @param event {*} fired by HammerJS, DOM event nested in `event.srcEvent`
+     */
+    var handleContentsInteraction = function(event) {
+        if (!event.target.classList.contains('contentsLink')) {
+            // not a link element
+            return;
+        }
+        var contentsId = event.target.dataset.id;
+        var callback = contentsId && contentsCallbacks[contentsId];
+        typeof callback == 'function' && callback(event);
+    };
+
+    var contentsManager = yudu_commonFunctions.createHammerJSTapManager(contentsUI.dropdown.list[0]);
+    contentsManager.on('tap', handleContentsInteraction);
 
     for (var i = 0, l = yudu_contentsSettings.contentsData.length; i < l; i++) {
         contentsUI.dropdown.list.append(renderContentsElement(yudu_contentsSettings.contentsData[i]));
@@ -499,20 +567,23 @@ var initContents = function() {
 };
 
 var renderContentsElement = function(contentsElementData) {
+    var contentsId = generateContentsId();
+
     var contentsElementDiv = $('<div></div>');
     contentsElementDiv.addClass('contentsElement');
 
     var contentsLink = $('<div></div>');
     contentsLink.addClass('contentsLink');
     contentsLink.html(contentsElementData.description);
+    contentsLink.attr('data-id', contentsId);
 
     var lineBreak = $('<hr>');
 
-    contentsLink.on('click', function() {
+    contentsCallbacks[contentsId] = function() {
         yudu_commonFunctions.goToPage(contentsElementData.page);
         hideContents();
         yudu_commonFunctions.hideToolbar();
-    });
+    };
 
     contentsElementDiv.append(contentsLink);
     contentsElementDiv.append(lineBreak);
@@ -525,6 +596,17 @@ var renderContentsElement = function(contentsElementData) {
 
     return contentsElementDiv;
 };
+
+/**
+ * Helper to generate a unique ID (intended for contents menu items) each time it is called
+ * Self-contained to prevent interference with the internal counter.
+ */
+var generateContentsId = (function() {
+    var contentsCounter = 0;
+    return function() {
+        return 'contentsItem' + (contentsCounter++);
+    };
+}());
 
 var toggleContentsAction = function() {
     if (toggleContents(true)) {

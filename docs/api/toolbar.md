@@ -29,6 +29,7 @@ Its two components will be available as the following global variables:
 + `pageModeStopToggle` - `true` if the edition was set up to prevent the current page mode (one page visible or two) from being toggled, `false` otherwise
 + `fullscreenModeEnabled` - `true` if the edition was set up to allow users to enter fullscreen mode, `false` otherwise
 + `hasArticles` - `true` if the edition was set up with HTML articles to be used in PhoneView, `false` otherwise
++ `editionLaunchableHtmlEnabled` - `true` if the edition was set up with an HTML overlay zip file whose contents are to be displayed in a lightbox launched from a toolbar button, `false` otherwise
 
 ## Toolbar Functions
 
@@ -66,3 +67,5 @@ Its two components will be available as the following global variables:
     + will do nothing unless `yudu_toolbarSettings.hasArticles` is `true` and `articlesAvailable` returns true
 + `setAutoHide(enable)` – call when a button triggering a togglable is clicked to stop the toolbar from hiding when the togglable is shown (`enable = false`) or to re-enable auto hiding after a certain period of time when the togglable is hidden (`enable = true`)
     + a togglable is a feature represented by a box whose visibility is toggled by a toolbar button and which requires the toolbar to remain visible for the duration for which it's shown (e.g. sharing or contents)
++ `editionLaunchableHtmlClicked` - call when the `editionLaunchableHtml` button is clicked
+    + available only if `yudu_toolbarSettings.editionLaunchableHtmlEnabled` is `true`
