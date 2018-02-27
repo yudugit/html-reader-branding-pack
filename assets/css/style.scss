@@ -1,0 +1,67 @@
+---
+---
+
+@import "{{ site.theme }}";
+
+// "fixes" for theme styling
+.highlight {
+    // stop the highlight class from breaking background colours for overflowing code
+    background-color: #fff;
+}
+
+ul, ol {
+    // stop adding margins in the middle of lists
+    margin-bottom: 0
+}
+
+:not(li)>ul, :not(li)>ol {
+    // only add margins to the outermost list
+    margin-bottom: 15px
+}
+
+// "expanding" margins
+@media screen and (min-width: 640px) {
+    .inner {
+        max-width: none;
+        margin-left: calc((100% - 640px) / 2);
+        margin-right: calc((100% - 640px) / 2);
+    }
+}
+
+@media screen and (min-width: 840px) {
+    .inner {
+        margin-left: 100px;
+        margin-right: 100px;
+    }
+}
+
+// custom styling
+#links {
+    position: absolute;
+    width: 210px;
+    z-index: 10;
+    bottom: -40px;
+    left: 0;
+    height: 70px;
+}
+
+.header_link {
+    display: block;
+    float: left;
+    width: 80px;
+    height: 65px;
+    text-indent: -5000px;
+    overflow: hidden;
+    border-radius: 5px;
+    background-color: #0090FF;
+}
+
+.toc_link {
+    background: #0090FF url(../images/contents.png) no-repeat center center;
+}
+
+@media screen and (max-width: 480px) {
+    #links {
+        display: none;
+    }
+}

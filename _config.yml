@@ -1,1 +1,6 @@
 theme: jekyll-theme-slate
+title: The HTML Reader Branding Pack
+description: Modifiable branding pack for <a href='http://www.yudu.com'>Yudu</a>'s HTML Reader.
+show_downloads: true
+show_header_links: true
+exclude: [artwork, drawingToolbars, gradle, info, loading, phoneview, rollovers, thumbnails, toolbar, build.gradle, customStringsPack.json, Gemfile, gradlew, gradlew.bat, logo.png, placeholder.png, settings.gradle]
