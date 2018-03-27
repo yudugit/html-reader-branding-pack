@@ -36,4 +36,5 @@ The HTML Reader branding pack is a bundle of materials that can be applied to [Y
     + [Toolbar](./docs/api/toolbar.md)
         + [Toolbar Settings](./docs/api/toolbar.md#toolbar-settings)
         + [Toolbar Functions](./docs/api/toolbar.md#toolbar-functions)
++ [Other publicly-accessible APIs](./docs/public/public.md)
 + [Final Notes](./docs/notes.md)

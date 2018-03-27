@@ -41,6 +41,22 @@ It follows the following structure:
 + `LOADING`
     + `DISPLAY_PROGRESS`
     + `END_LOADING`
++ `STATISTICS`
+    + `VISITED`
+    + `PAGE_VIEWED`
+    + `SEARCHED`
+    + `EMAIL_LINK_CLICKED`
+    + `WEB_LINK_CLICKED`
+    + `PAGE_LINK_CLICKED`
+    + `LOGO_CLICKED`
+    + `VIDEO_WATCHED`
+    + `VIDEO_RESUMED`
+    + `VIDEO_MILESTONE_REACHED`
+    + `VIDEO_FINISHED`
+    + `EMAILED`
+    + `SUBSCRIBED`
+    + `TWEETED`
+    + `FACEBOOKED`
 
 ## Event Emitter
 
