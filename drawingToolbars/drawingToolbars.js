@@ -50,11 +50,16 @@ var drawingToolbarsInit = function() {
 };
 
 var addEditOptionsToolbarButtonEventListeners = function() {
-    editOptionsToolbarButtons.cancelButton.on(yudu_commonSettings.clickAction, drawingButtonHit(this, yudu_drawingToolbarFunctions.cancel));
-    editOptionsToolbarButtons.undoButton.on(yudu_commonSettings.clickAction, drawingButtonHit(this, yudu_drawingToolbarFunctions.undo));
-    editOptionsToolbarButtons.clearButton.on(yudu_commonSettings.clickAction, drawingButtonHit(this, yudu_drawingToolbarFunctions.clearAll));
-    editOptionsToolbarButtons.redoButton.on(yudu_commonSettings.clickAction, drawingButtonHit(this, yudu_drawingToolbarFunctions.redo));
-    editOptionsToolbarButtons.saveButton.on(yudu_commonSettings.clickAction, drawingButtonHit(this, yudu_drawingToolbarFunctions.save));
+    var cancelManager = yudu_commonFunctions.createHammerJSTapManager(editOptionsToolbarButtons.cancelButton[0]);
+    cancelManager.on('tap', yudu_drawingToolbarFunctions.cancel);
+    var undoManager = yudu_commonFunctions.createHammerJSTapManager(editOptionsToolbarButtons.undoButton[0]);
+    undoManager.on('tap', yudu_drawingToolbarFunctions.undo);
+    var clearManager = yudu_commonFunctions.createHammerJSTapManager(editOptionsToolbarButtons.clearButton[0]);
+    clearManager.on('tap', yudu_drawingToolbarFunctions.clearAll);
+    var redoManager = yudu_commonFunctions.createHammerJSTapManager(editOptionsToolbarButtons.redoButton[0]);
+    redoManager.on('tap', yudu_drawingToolbarFunctions.redo);
+    var saveManager = yudu_commonFunctions.createHammerJSTapManager(editOptionsToolbarButtons.saveButton[0]);
+    saveManager.on('tap', yudu_drawingToolbarFunctions.save);
 };
 
 var registerDrawingToolbarsForYuduEvents = function() {
