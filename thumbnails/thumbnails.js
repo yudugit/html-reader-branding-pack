@@ -603,19 +603,10 @@ var Thumbnails = function(settings) {
         this.updateVisibleIcons();
     };
 
-    /**
-     * Event handler (HTML Reader) to respond to a "logged in" event
-     */
-    this.loggedIn = function() {
-        for(var i = 0; i < this.iconsLength(); i++) {
-            this.icons()[i].setImage();
-        }
-    };
-
     // Other listeners for the thumbnails bar
     yudu_events.subscribe(yudu_events.ALL, yudu_events.THUMBNAILS.PAGE_CHANGED, yudu_events.callback(this, this.setPageNumber), false);
     yudu_events.subscribe(yudu_events.ALL, yudu_events.COMMON.TOUCH, yudu_events.callback(this, this.toggle, false, false), false);
-    yudu_events.subscribe(yudu_events.ALL, yudu_events.COMMON.LOGIN_SUCCESS, yudu_events.callback(this, this.loggedIn), false);
+
     //endregion
 };
 
