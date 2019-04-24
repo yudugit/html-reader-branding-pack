@@ -73,6 +73,8 @@ The current default English values are as follows (in JSON format):
     "criticalError": "An error occurred, please refresh and try again",
     "phoneview.criticalError":  "An error occurred trying to open PhoneView, please try again",
     "search.placeholder": "Search edition",
+    "search.local": "Document",
+    "search.archive": "Archive",
     "search.noResults": "0 results",
     "search.searching": "Searching...",
     "search.close": "Close",
