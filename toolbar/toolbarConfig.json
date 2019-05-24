@@ -1,10 +1,8 @@
 {
   "mainHtmlFilePath": "toolbar/toolbar.html",
   "mainJavascriptFilePath": "toolbar/toolbar.js",
-  "phoneviewHtmlFilePath": "toolbar/toolbar_phoneview.html",
-  "phoneviewJavascriptFilePath": "toolbar/toolbar.js",
-  "sharingHtmlFilePath": "toolbar/toolbarSharing.html",
-  "sharingJavascriptFilePath": "toolbar/toolbarSharing.js",
+  "phoneviewHtmlFilePath": "toolbarPhoneview/toolbarPhoneview.html",
+  "phoneviewJavascriptFilePath": "toolbarPhoneview/toolbarPhoneview.js",
   "desktopPosition": "top",
   "desktopSize": "34px",
   "touchPosition": "bottom",
