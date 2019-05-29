@@ -6,6 +6,10 @@ var sharingShowing = false;
 var sharingUI = {};
 var shareCurrentPage = false;
 
+var toolbarInit = function() {
+    initSharing();
+};
+
 var initSharing = function() {
     sharingUI = {
         //share button on the toolbar
@@ -178,6 +182,7 @@ var buttonOtherThanTogglableHit = function(scope, callback) {
     };
 };
 
+toolbarInit();
 
 // Make source available in developer tools
 //@ sourceURL=toolbarPhoneview.js
