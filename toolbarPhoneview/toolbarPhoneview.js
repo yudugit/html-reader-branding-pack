@@ -110,9 +110,12 @@ var toggleSharingPage = function(currentPageClicked) {
     sharingUI.dropdown.firstPage.toggleClass("selected");
 };
 
-var toggleShareAction = function() {
-    if (toggleSharing(true)) {
-   //qq     toggleContents(false, false);
+// This is called when the share toolbar button is called - changing it may disable sharing.
+var toggleShareAction = function(makeVisible) {
+    if (makeVisible == true || makeVisible == false) {
+        toggleSharing(false, makeVisible);
+    } else {
+        toggleSharing(true);
     }
 };
 
