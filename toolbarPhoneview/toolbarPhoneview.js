@@ -185,7 +185,8 @@ var buttonOtherThanTogglableHit = function(scope, callback) {
     };
 };
 
-toolbarInit();
+var cssFiles = [yudu_commonFunctions.createBrandingPath('toolbarPhoneview/style.css')];
+yudu_commonFunctions.loadCss(cssFiles, toolbarInit);
 
 // Make source available in developer tools
 //@ sourceURL=toolbarPhoneview.js
