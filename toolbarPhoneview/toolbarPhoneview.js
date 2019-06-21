@@ -151,40 +151,6 @@ var hideSharing = function() {
     toggleSharing(false, false);
 };
 
-
-/**
- * Miscellaneous controls
- */
-
-/*
-var onResize = function () {
-
-    if (!yudu_commonSettings.isDesktop) {
-        positionButtonsForTouch();
-    }
-    setTogglableLeftPosition();
-    positionSearchResults();
-};*/
-
-var setTogglableLeftPosition = function() {
-    setSharingLeftPosition();
-    setContentsLeftPosition();
-};
-
-var hideTogglables = function() {
-    hideSharing();
-    hideContents();
-    hideThumbnails();
-};
-
-var buttonOtherThanTogglableHit = function(scope, callback) {
-    var args = Array.prototype.slice.call(arguments, 2);
-    return function() {
-        hideTogglables();
-        return callback.apply(scope, args);
-    };
-};
-
 var cssFiles = [yudu_commonFunctions.createBrandingPath('toolbarPhoneview/style.css')];
 yudu_commonFunctions.loadCss(cssFiles, toolbarInit);
 
