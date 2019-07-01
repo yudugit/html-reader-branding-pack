@@ -164,7 +164,7 @@ var createButtons = function() {
     }
     if (yudu_toolbarSettings.editionLaunchableHtmlEnabled) {
         createButton('editionLaunchableHtml',
-                buttonOtherThanTogglableHit(this, yudu_toolbarFunctions.editionLaunchableHtmlClicked, highResIcons));
+            buttonOtherThanTogglableHit(this, yudu_toolbarFunctions.editionLaunchableHtmlClicked, highResIcons));
     }
 
 
@@ -250,8 +250,8 @@ var getIconFor = function(id, highResIcons) {
         highResIcons = yudu_toolbarSettings.shouldUseHighRes;
     }
     return yudu_toolbarSettings.toolbarIconBasePath
-            + (highResIcons ? yudu_toolbarSettings.iconHighResPrefix : '')
-            + id + yudu_toolbarSettings.iconFileExtension;
+        + (highResIcons ? yudu_toolbarSettings.iconHighResPrefix : '')
+        + id + yudu_toolbarSettings.iconFileExtension;
 };
 
 /**
@@ -331,9 +331,9 @@ var initFullscreen = function(highResIcons) {
  */
 var isFullscreen = function() {
     return document.fullscreenElement
-            || document.msFullscreenElement
-            || document.mozFullScreenElement
-            || document.webkitFullscreenElement;
+        || document.msFullscreenElement
+        || document.mozFullScreenElement
+        || document.webkitFullscreenElement;
 };
 
 /**
