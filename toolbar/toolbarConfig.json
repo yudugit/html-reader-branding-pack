@@ -1,8 +1,6 @@
 {
   "mainHtmlFilePath": "toolbar/toolbar.html",
   "mainJavascriptFilePath": "toolbar/toolbar.js",
-  "phoneviewHtmlFilePath": "toolbarPhoneview/toolbarPhoneview.html",
-  "phoneviewJavascriptFilePath": "toolbarPhoneview/toolbarPhoneview.js",
   "desktopPosition": "top",
   "desktopSize": "34px",
   "touchPosition": "bottom",
