@@ -10,7 +10,7 @@ apply plugin: 'js'
 apply plugin: 'css'
 
 
-def subProjects = ['toolbar', 'thumbnails', 'loading', 'drawingToolbars']
+def subProjects = ['toolbar', 'toolbarPhoneview', 'thumbnails', 'loading', 'drawingToolbars']
 def minificationTasks = []
 def compilationTasks = []
 def cleaningTasks = []
@@ -105,6 +105,8 @@ task copyBrandingPack(type: Copy, dependsOn: [cleanBuild, build]) {
     exclude 'thumbnails/thumbnails.js'
     include 'toolbar/'
     exclude 'toolbar/toolbar.js'
+    include 'toolbarPhoneview/'
+    exclude 'toolbarPhoneview/toolbarPhoneview.js'
     include 'drawingToolbars/'
     exclude 'drawingToolbars/drawingToolbars.js'
     include 'artwork/'
