@@ -7,6 +7,7 @@ var sharingUI = {};
 var shareCurrentPage = false;
 
 var toolbarInit = function() {
+    yudu_events.subscribe(yudu_events.ALL, yudu_events.TAP, hideSharing, false);
     initSharing();
 };
 
