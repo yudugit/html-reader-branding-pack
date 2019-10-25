@@ -35,7 +35,11 @@ Its two components will be available as the following global variables:
     + will be the left-hand page in two-up mode
     + NB: pages are 0-indexed, with index 0 referring to the intro page if present, or the first page of the edition if not. Use in combination with `yudu_commonSettings.hasIntroPage` to convert to a page number if required.
 + `getThumbnailUrl` - takes a thumbnail filename and retrieves the URL for it
+    + DEPRECATED - use `generateThumbnailUrl` instead
++ `generateThumbnailUrl` - takes a thumbnail filename and a one-parameter function to call with the generated URL
 + `getThumbnailUrlCss` - takes a thumbnail filename and returns a string suitable for changing a DOM element's image to the thumbnail via the element's CSS
+    + DEPRECATED - use `generateThumbnailUrlCss` instead
++ `generateThumbnailUrlCss` - takes a thumbnail filename and a one-parameter function to call with the generated string which is suitable for changing a DOM element's image to the thumbnail via the element's CSS
 + `getThumbnailFileName` - takes a page index and retrieves the filename for the thumbnail of the specified page
 + `addElementToStage(element)` – call to add an EaselJS element to the stage
 + `toggleThumbnails(toggle, show)` – call to emit an event to toggle (use only the `toggle` parameter) or show/hide (use the `show` parameter, with `toggle` set to `false`) the thumbnails
