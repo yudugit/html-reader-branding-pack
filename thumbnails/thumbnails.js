@@ -140,7 +140,6 @@ var Thumbnails = function(settings) {
                 pageNumber: pageNumber,
                 pageDetailsIndex: i
             };
-            thumbnailSettings.fileSrc = yudu_commonFunctions.returnFunctionWithDynamicArgs(yudu_thumbnailsFunctions.getThumbnailUrl, thumbnailSettings.filename);
             icons.push(new Thumbnail(this, thumbnailSettings));
         }
         new CarouselIconSet(this, {
@@ -1544,7 +1543,6 @@ var Thumbnail = function(carousel, settings) {
 
     this.id = settings.id;
     this.filename = settings.filename;
-    this.fileSrc = settings.fileSrc;
     this.fileHeight = settings.fileHeight;
     this.fileWidth = settings.fileWidth;
     this.pageNumber = settings.pageNumber;
@@ -1574,7 +1572,10 @@ var Thumbnail = function(carousel, settings) {
      */
     this.setImage = function() {
         if(this.initialised) {
-            this.htmlElement.style.backgroundImage = 'url(' + this.fileSrc() + ')';
+            var finalHtmlElement = this.htmlElement;
+            window.yudu_thumbnailsFunctions.generateThumbnailUrl(this.filename(), function (thumbnailUrl) {
+                finalHtmlElement.style.backgroundImage = 'url(' + thumbnailUrl + ')';
+            });
         }
     };
 
