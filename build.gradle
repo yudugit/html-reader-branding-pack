@@ -114,6 +114,7 @@ task copyBrandingPack(type: Copy, dependsOn: [cleanBuild, build]) {
     include 'rollovers/'
     include 'phoneview/'
     include 'customStringsPack.json/'
+    include 'assets/audio/'
     include 'logo.png'
     include 'placeholder.png'
     // exclude all sourcemap files
