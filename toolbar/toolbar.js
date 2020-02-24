@@ -728,7 +728,7 @@ var toggleUserPreferences = function(toggle, show) {
         return userPreferencesShowing;
     }
     if (shouldShow) {
-        userPreferencesUI.dialog.container.show();///qqqq
+        userPreferencesUI.dialog.container.show();
     } else {
         userPreferencesUI.dialog.container.hide();
     }
