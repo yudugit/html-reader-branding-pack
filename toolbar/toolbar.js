@@ -196,7 +196,7 @@ var createButton = function(id, callback, highResIcons) {
         button.addClass('touchControl');
     }
 
-    buttonCallbacks[id] = callback();
+    buttonCallbacks[id] = callback;
 
     $('<img />')
         .attr('src', iconPath)
@@ -290,7 +290,6 @@ var handleButtonPress = function(event) {
  *  mean the buttons will not be rendered (and hence not visible) on initial calculation
  */
 var positionButtonsForTouch = function() {
-    console.log('here');
     if (visibleButtons.__yudu_count == 0) {
         return;
     }
