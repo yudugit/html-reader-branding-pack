@@ -4,23 +4,30 @@
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.3);
   height: 34px;
   width: 100%;
-  position: absolute;
+  position: fixed;
   z-index: 2000;
   white-space: nowrap;
 
   .control {
     border: none;
-    background: transparent no-repeat center;
-    background-size: contain;
     outline: none;
+
     width: 24px;
     height: 24px;
     display: inline-block;
 
     margin: 5px 10px;
     padding: 0;
+    text-align: center;
+
 
     &:hover {cursor: pointer;}
+
+    img {
+      vertical-align: middle;
+      max-width: 24px;
+      max-height: 24px;
+    }
   }
 
   .touchControl {
