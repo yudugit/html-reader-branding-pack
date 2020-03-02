@@ -198,10 +198,17 @@ var createButton = function(id, callback, highResIcons) {
 
     buttonCallbacks[id] = callback;
 
-    $('<img />')
+    var icon = $('<img />')
         .attr('src', iconPath)
-        .attr('id', id)
-        .appendTo(button);
+        .attr('id', id);
+
+    var altText = yudu_commonFunctions.getLocalisedStringByCode('toolbar.button.' + id);
+    console.log('altText: ', altText);
+    if (altText) {
+        icon.attr('aria-label', altText);
+    }
+
+    icon.appendTo(button);
 
     newButton(id, button);
     button.insertBefore($('#rightControls'));
