@@ -49,11 +49,11 @@ var handleShoppingCartEvent = function(event) {
     if (event.data.toggleIcon) {
         var highResIcons = yudu_toolbarSettings.shouldUseHighRes;
         var mainIconPath = getIconFor('shoppingCart', highResIcons);
-        if (button.css('background-image').indexOf(mainIconPath.substr(1)) >= 0) {
+        if (button.children('img').attr('src').indexOf(mainIconPath.substr(1)) >= 0) {
             var highlightedIconPath = getIconFor('highlightedShoppingCart', highResIcons);
-            button.css('background-image', 'url(' + highlightedIconPath + ')');
+            button.children('img').attr('src', highlightedIconPath);
         } else {
-            button.css('background-image', 'url(' + mainIconPath + ')');
+            button.children('img').attr('src', mainIconPath);
         }
     }
 
