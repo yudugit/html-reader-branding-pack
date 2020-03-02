@@ -203,12 +203,7 @@ var createButton = function(id, callback, highResIcons) {
         .attr('id', id);
 
     var altText = yudu_commonFunctions.getLocalisedStringByCode('toolbar.button.' + id);
-    console.log('altText: ', altText);
-    if (altText) {
-        icon.attr('aria-label', altText);
-    }
-
-    icon.appendTo(button);
+    icon.attr('aria-label', altText.indexOf('toolbar.button.') === 0 ? id : altText).appendTo(button);
 
     newButton(id, button);
     button.insertBefore($('#rightControls'));
