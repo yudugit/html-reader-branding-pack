@@ -12,6 +12,8 @@ Its two components will be available as the following global variables:
     + available only if `yudu_toolbarSettings.sharing.twitter` is `true`
 + `facebookIconPath` – the path of the image used for the Facebook icon in the sharing box
     + available only if `yudu_toolbarSettings.sharing.facebook` is `true`
++ `linkedInIconPath` – the path of the image used for the LinkedIn icon in the sharing box
+    + available only if `yudu_toolbarSettings.sharing.linkedIn` is `true`
 
 ## Sharing Functions
 
@@ -24,3 +26,5 @@ Its two components will be available as the following global variables:
     + available only if `yudu_toolbarSettings.sharing.twitter` is `true`
 + `shareFacebook` – call when the "share on Facebook" button is clicked
     + available only if `yudu_toolbarSettings.sharing.facebook` is `true`
++ `shareLinkedIn` – call when the "share on LinkedIn" button is clicked
+    + available only if `yudu_toolbarSettings.sharing.linkedIn` is `true`
