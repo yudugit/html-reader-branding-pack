@@ -15,6 +15,7 @@ The current default English values are as follows (in JSON format):
     "sharing.email": "Email",
     "sharing.facebook": "Facebook",
     "sharing.twitter": "Twitter",
+    "sharing.linkedIn": "LinkedIn",
     "sharing.fromAddress": "From",
     "sharing.toAddress": "To",
     "sharing.fromAddressPlaceholder": "me@example.com",
