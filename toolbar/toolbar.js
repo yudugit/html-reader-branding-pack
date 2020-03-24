@@ -135,7 +135,7 @@ var createButtons = function() {
     if (yudu_contentsSettings.contentsData && yudu_contentsSettings.contentsData.length > 0) {
         createButton('contents', toggleContentsAction, highResIcons);
     }
-    if (yudu_toolbarSettings.sharing.emailEnabled || yudu_toolbarSettings.sharing.twitter || yudu_toolbarSettings.sharing.facebook) {
+    if (yudu_toolbarSettings.sharing.emailEnabled || yudu_toolbarSettings.sharing.twitter || yudu_toolbarSettings.sharing.facebook || yudu_toolbarSettings.sharing.facebook) {
         createButton('share', toggleShareAction, highResIcons);
     }
     if (yudu_toolbarSettings.hasDownloadablePdfAndIsNotApp) {
@@ -404,7 +404,7 @@ var initSharing = function() {
         return false;
     });
 
-    if (yudu_toolbarSettings.sharing.emailEnabled || yudu_toolbarSettings.sharing.twitter || yudu_toolbarSettings.sharing.facebook) {
+    if (yudu_toolbarSettings.sharing.emailEnabled || yudu_toolbarSettings.sharing.twitter || yudu_toolbarSettings.sharing.facebook || yudu_toolbarSettings.sharing.linkedIn) {
         sharingCallbacks.currentPage = function() {
             toggleSharingPage(true);
         };
@@ -453,6 +453,10 @@ var initSharing = function() {
 
     if(yudu_toolbarSettings.sharing.facebook) {
         addSharingButton('facebook', yudu_sharingSettings.facebookIconPath, yudu_sharingFunctions.shareFacebook);
+    }
+
+    if(yudu_toolbarSettings.sharing.linkedIn) {
+        addSharingButton('linkedIn', yudu_sharingSettings.linkedInIconPath, yudu_sharingFunctions.shareLinkedIn);
     }
 
     setSharingLeftPosition();
