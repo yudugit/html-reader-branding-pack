@@ -376,6 +376,7 @@ var Thumbnails = function(settings) {
             yudu_commonFunctions.hideToolbar();
             this.carouselContainerElement.show();
         } else {
+            yudu_events.emit(yudu_events.ALL, yudu_events.THUMBNAILS.HIDE_THUMBNAILS_PAGE_NOT_CHANGED);
             this.carouselContainerElement.hide();
         }
         return this.isVisible;
@@ -1106,7 +1107,6 @@ var CarouselScroller = function(carousel, settings) {
             this.carousel.isSpringing = false;
             var pageNumber = parseInt($.data(event.target, "page"));
             yudu_commonFunctions.goToPage(pageNumber);
-            yudu_events.emit(yudu_events.ALL, yudu_events.THUMBNAILS.HIDE_THUMBNAILS_PAGE_NOT_CHANGED);
             this.carousel.toggle(false, false);
         }
     };
