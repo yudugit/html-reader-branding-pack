@@ -376,6 +376,7 @@ var Thumbnails = function(settings) {
             yudu_commonFunctions.hideToolbar();
             this.carouselContainerElement.show();
         } else {
+            yudu_events.emit(yudu_events.ALL, yudu_events.THUMBNAILS.HIDE_THUMBNAILS_PAGE_NOT_CHANGED);
             this.carouselContainerElement.hide();
         }
         return this.isVisible;
