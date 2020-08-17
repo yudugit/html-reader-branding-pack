@@ -20,7 +20,6 @@ var registerForYuduEvents = function() {
     yudu_events.subscribe(yudu_events.ALL, yudu_events.TOOLBAR.UPDATE_BOOKMARK_BUTTON, handleBookmarkUpdateEvent, false);
     yudu_events.subscribe(yudu_events.ALL, yudu_events.COMMON.RESIZE, onResize, false);
     yudu_events.subscribe(yudu_events.ALL, yudu_events.COMMON.TOUCH, hideTogglables, false);
-    yudu_events.subscribe(yudu_events.ALL, yudu_events.COMMON.LOGIN_APPROVED, onLoginApproved, false);
     if (window.yudu_searchFunctions) {
         searchSetup();
     } else {
@@ -167,12 +166,6 @@ var createButtons = function() {
             buttonOtherThanTogglableHit(this, yudu_toolbarFunctions.editionLaunchableHtmlClicked, highResIcons));
     }
 
-
-    // if not logged into a protected edition, phoneview should not be available yet
-    if (!yudu_toolbarFunctions.articlesAvailable()) {
-        hideButton('phoneview');
-        // note: the button is shown when the reader emits a `LOGIN_APPROVED` event - see the `onLoginApproved` function below
-    }
     //the fitPage button is the toggled version of the fitWidth so hide it by default
     hideButton('fitPage');
 
@@ -720,16 +713,6 @@ var onResize = function () {
     }
     setTogglableLeftPosition();
     positionSearchResults();
-};
-
-var onLoginApproved = function() {
-    if (yudu_toolbarFunctions.articlesAvailable()) {
-        showButton('phoneview');
-        if (!yudu_commonSettings.isDesktop) {
-            positionButtonsForTouch();
-        }
-        yudu_events.unsubscribe(yudu_events.ALL, yudu_events.COMMON.LOGIN_APPROVED, onLoginApproved, false);
-    }
 };
 
 var setTogglableLeftPosition = function() {
