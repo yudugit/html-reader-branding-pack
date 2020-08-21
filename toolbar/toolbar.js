@@ -11,6 +11,7 @@ var toolbarInit = function() {
     createBar();
     initSharing();
     initContents();
+    initUserPreferences();
     yudu_commonFunctions.toolbarFinishedLoading();
 };
 
@@ -164,6 +165,10 @@ var createButtons = function() {
     if (yudu_toolbarSettings.editionLaunchableHtmlEnabled) {
         createButton('editionLaunchableHtml',
             buttonOtherThanTogglableHit(this, yudu_toolbarFunctions.editionLaunchableHtmlClicked, highResIcons));
+    }
+
+    if (yudu_toolbarSettings.userPreferences && enableUserPreferencesSettings()) {
+        createButton('userPreferences', toggleUserPreferencesAction, highResIcons);
     }
 
     //the fitPage button is the toggled version of the fitWidth so hide it by default
@@ -469,6 +474,7 @@ var toggleShareAction = function() {
     if (toggleSharing(true)) {
         yudu_toolbarFunctions.setAutoHide(false);
         toggleContents(false, false);
+        toggleUserPreferences(false, false);
         yudu_thumbnailsFunctions.toggleThumbnails(false, false);
     } else {
         yudu_toolbarFunctions.setAutoHide(true);
@@ -610,6 +616,7 @@ var toggleContentsAction = function() {
         yudu_toolbarFunctions.setAutoHide(false);
         yudu_thumbnailsFunctions.toggleThumbnails(false, false);
         toggleSharing(false, false);
+        toggleUserPreferences(false, false);
     } else {
         yudu_toolbarFunctions.setAutoHide(true);
     }
@@ -649,6 +656,104 @@ var hideContents = function() {
     toggleContents(false, false);
 };
 
+
+/**
+ * User preferences controls
+ */
+var userPreferencesShowing = false;
+var userPreferencesUI = {};
+
+var initUserPreferences = function() {
+    userPreferencesUI = {
+        //share button on the toolbar
+        userPreferencesButton: $('#userPreferences'),
+        //Share sheet drop down elements
+        dialog: {
+            container: $('#yudu_userPreferences'),
+            checkboxes: $('#yudu_userPreferences input')
+        }
+    };
+
+    userPreferencesUI.dialog.checkboxes.change(function(event) {
+        var checkbox = $(event.target);
+        var settingName = checkbox.parent().attr('data-setting-name');
+        var value = checkbox.is(':checked');
+
+        if (settingName && window.yudu_commonFunctions.updateUserPreferenceSetting) {
+            window.yudu_commonFunctions.updateUserPreferenceSetting(settingName, value);
+        }
+    });
+
+    setUserPreferencesLeftPosition();
+};
+
+var enableUserPreferencesSettings = function() {
+    var foundEnabledSetting = false;
+
+    for (var settingName in yudu_toolbarSettings.userPreferences) {
+        if (!yudu_toolbarSettings.userPreferences.hasOwnProperty(settingName))continue;
+
+        var setting = yudu_toolbarSettings.userPreferences[settingName];
+        if (!setting.show) continue;
+
+        var fields = $('#yudu_userPreferences').children('div[data-setting-name=' + settingName + ']');
+        fields.show();
+
+        if (setting.default) {
+            fields.find("input[type='checkbox']").prop('checked', true);
+        }
+
+        foundEnabledSetting = foundEnabledSetting || (fields.length > 0);
+    }
+
+    return foundEnabledSetting;
+};
+
+var toggleUserPreferencesAction = function() {
+    if (toggleUserPreferences(true)) {
+        yudu_toolbarFunctions.setAutoHide(false);
+        toggleSharing(false, false);
+        toggleContents(false, false);
+        yudu_thumbnailsFunctions.toggleThumbnails(false, false);
+    } else {
+        yudu_toolbarFunctions.setAutoHide(true);
+    }
+};
+
+var toggleUserPreferences = function(toggle, show) {
+    var shouldShow = toggle ? !userPreferencesShowing : show;
+
+    if (shouldShow == userPreferencesShowing) {
+        return userPreferencesShowing;
+    }
+    if (shouldShow) {
+        userPreferencesUI.dialog.container.show();
+    } else {
+        userPreferencesUI.dialog.container.hide();
+    }
+    userPreferencesShowing = shouldShow;
+    setUserPreferencesLeftPosition();
+    return userPreferencesShowing;
+};
+
+var setUserPreferencesLeftPosition = function() {
+    if (!userPreferencesShowing) {
+        return;
+    }
+
+    var userPreferencesButtonLeft = userPreferencesUI.userPreferencesButton.offset().left;
+    var userPreferencesLeft = Math.min(userPreferencesButtonLeft, yudu_commonSettings.width / yudu_commonSettings.pixelDensity - userPreferencesUI.dialog.container.width() - 10);
+    userPreferencesUI.dialog.container.css({"left": userPreferencesLeft});
+};
+
+var hideUserPreferences = function() {
+    if (!userPreferencesShowing) {
+        return;
+    }
+
+    toggleUserPreferences();
+};
+
 /**
  * Thumbnails controls
  */
@@ -656,6 +761,7 @@ var toggleThumbnailsAction = function() {
     yudu_thumbnailsFunctions.toggleThumbnails(true);
     toggleSharing(false, false);
     toggleContents(false, false);
+    toggleUserPreferences(false, false);
 };
 
 var hideThumbnails = function() {
@@ -669,6 +775,7 @@ var toggleDrawingModeAction = function() {
     yudu_drawingToolbarFunctions.setHighlightingMode(true);
     toggleSharing(false, false);
     toggleContents(false, false);
+    toggleUserPreferences(false, false);
     hideThumbnails();
 };
 
@@ -718,11 +825,13 @@ var onResize = function () {
 var setTogglableLeftPosition = function() {
     setSharingLeftPosition();
     setContentsLeftPosition();
+    setUserPreferencesLeftPosition();
 };
 
 var hideTogglables = function() {
     hideSharing();
     hideContents();
+    hideUserPreferences();
     hideThumbnails();
 };
 
