@@ -23,6 +23,8 @@ var initSharing = function() {
         }
     };
 
+    sharingUI.dropdown.firstPage.attr('tabIndex', '-1');
+
     var sharingCallbacks = {};
 
     /**
@@ -132,6 +134,7 @@ var toggleSharing = function(toggle, show) {
     }
     if (shouldShow) {
         sharingUI.dropdown.container.show();
+        sharingUI.dropdown.firstPage.focus();
     } else {
         sharingUI.dropdown.container.hide();
     }

@@ -49,11 +49,11 @@ var handleShoppingCartEvent = function(event) {
     if (event.data.toggleIcon) {
         var highResIcons = yudu_toolbarSettings.shouldUseHighRes;
         var mainIconPath = getIconFor('shoppingCart', highResIcons);
-        if (button.css('background-image').indexOf(mainIconPath.substr(1)) >= 0) {
+        if (button.children('img').attr('src').indexOf(mainIconPath.substr(1)) >= 0) {
             var highlightedIconPath = getIconFor('highlightedShoppingCart', highResIcons);
-            button.css('background-image', 'url(' + highlightedIconPath + ')');
+            button.children('img').attr('src', highlightedIconPath);
         } else {
-            button.css('background-image', 'url(' + mainIconPath + ')');
+            button.children('img').attr('src', mainIconPath);
         }
     }
 
@@ -71,7 +71,7 @@ var handleBookmarkUpdateEvent = function(event) {
     var button = buttons['bookmark'];
     var bookmarked = event.data.bookmarkOn;
     var iconPath = getIconFor((bookmarked ? 'bookmarked' : 'bookmark'));
-    button.css('background-image', 'url(' + iconPath + ')');
+    button.children('img').attr('src', iconPath);
 };
 
 var createBar = function() {
@@ -189,12 +189,20 @@ var createButtons = function() {
 
 var createButton = function(id, callback, highResIcons) {
     var iconPath = getIconFor(id, highResIcons);
-    var button = $('<a type="button" class="control" tabindex="-1" id="' + id + '"></a>');
+    var button = $('<a type="button" class="control" id="' + id + '"></a>');
     if (!yudu_commonSettings.isDesktop) {
         button.addClass('touchControl');
     }
-    button.css('background-image', 'url(' + iconPath + ')');
+
     buttonCallbacks[id] = callback;
+
+    var icon = $('<img />')
+        .attr('src', iconPath)
+        .attr('id', id);
+
+    var altText = yudu_commonFunctions.getLocalisedStringByCode('toolbar.button.' + id);
+    icon.attr('aria-label', altText.indexOf('toolbar.button.') === 0 ? id : altText).appendTo(button);
+
     newButton(id, button);
     button.insertBefore($('#rightControls'));
 };
@@ -286,15 +294,13 @@ var positionButtonsForTouch = function() {
         return;
     }
     var gap = controls.width() / visibleButtons.__yudu_count;
-    var offset = false;
     var count = 0;
     // need to iterate over `buttons` to preserve button order
     for (var id in buttons) {
         if (visibleButtons.hasOwnProperty(id)) {
-            if (offset === false) {
-                offset = (gap / 2) - (visibleButtons[id].outerWidth(true) / 2);
-            }
-            visibleButtons[id].css({"left": offset + (gap * count)});
+            var offset = (visibleButtons[id].outerWidth(true) / 2);
+            var position = (gap / 2) + (gap * count) - offset;
+            visibleButtons[id].css({"left": position });
             count++;
         }
     }
