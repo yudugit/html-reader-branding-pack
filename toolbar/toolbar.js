@@ -206,6 +206,8 @@ var createButton = function(id, callback, highResIcons) {
 
     newButton(id, button);
     button.insertBefore($('#rightControls'));
+
+    return button;
 };
 
 var createButtonNoIcon = function(id, callback) {
