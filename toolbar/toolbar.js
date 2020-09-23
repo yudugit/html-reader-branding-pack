@@ -332,6 +332,7 @@ var initFullscreen = function(highResIcons) {
     document.addEventListener('msfullscreenchange', prepareFullscreenIcon);
     document.addEventListener('mozfullscreenchange', prepareFullscreenIcon);
     document.addEventListener('webkitfullscreenchange', prepareFullscreenIcon);
+    prepareFullscreenIcon();
 };
 
 /**
