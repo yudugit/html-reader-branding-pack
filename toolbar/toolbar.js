@@ -321,9 +321,7 @@ var fullscreenUI;
  * @param highResIcons ; whether to use a high-resolution image for the icon
  */
 var initFullscreen = function(highResIcons) {
-    var id = 'fullscreen';
-    createButton(id, toggleFullscreen);
-    var button = $('#' + id);
+    var button = createButton('fullscreen', toggleFullscreen);
     fullscreenUI = {
         button: button,
         img: $('img#fullscreen' + buttonImageIdSuffix, button),
