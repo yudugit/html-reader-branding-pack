@@ -5,6 +5,7 @@ var visibleButtons = {
     __yudu_count: 0
 };
 var numberOfProductsSpan;
+var buttonImageIdSuffix = '-img';
 
 var toolbarInit = function() {
     registerForYuduEvents();
@@ -198,7 +199,7 @@ var createButton = function(id, callback, highResIcons) {
 
     var icon = $('<img />')
         .attr('src', iconPath)
-        .attr('id', id);
+        .attr('id', id + buttonImageIdSuffix);
 
     var altText = yudu_commonFunctions.getLocalisedStringByCode('toolbar.button.' + id);
     icon.attr('aria-label', altText.indexOf('toolbar.button.') === 0 ? id : altText).appendTo(button);
@@ -277,7 +278,9 @@ var addButtonListener = function() {
 var handleButtonPress = function(event) {
     var element = event.target;
     if (element && element.id) {
-        var callback = buttonCallbacks[element.id];
+        var elementId = element.id.endsWith(buttonImageIdSuffix)
+            ? element.id.replace(buttonImageIdSuffix, '') : element.id;
+        var callback = buttonCallbacks[elementId];
         if (typeof callback == 'function') {
             callback();
         }
