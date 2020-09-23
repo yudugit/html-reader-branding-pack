@@ -325,8 +325,8 @@ var initFullscreen = function(highResIcons) {
     fullscreenUI = {
         button: button,
         img: $('img#fullscreen' + buttonImageIdSuffix, button),
-        iconEnter: 'url(' + getIconFor('fullscreen-enter', highResIcons) + ')',
-        iconExit: 'url(' + getIconFor('fullscreen-exit', highResIcons) + ')'
+        iconEnter: getIconFor('fullscreen-enter', highResIcons),
+        iconExit: getIconFor('fullscreen-exit', highResIcons)
     };
     document.addEventListener('fullscreenchange', prepareFullscreenIcon);
     document.addEventListener('msfullscreenchange', prepareFullscreenIcon);
@@ -364,9 +364,9 @@ var toggleFullscreen = function() {
  */
 var prepareFullscreenIcon = function() {
     if (isFullscreen()) {
-        fullscreenUI.button.css('background-image', fullscreenUI.iconExit);
+        fullscreenUI.img.attr('src', fullscreenUI.iconExit);
     } else {
-        fullscreenUI.button.css('background-image', fullscreenUI.iconEnter);
+        fullscreenUI.img.attr('src', fullscreenUI.iconEnter);
     }
 };
 
