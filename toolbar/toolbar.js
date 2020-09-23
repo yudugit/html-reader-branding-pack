@@ -319,13 +319,12 @@ var fullscreenUI;
  * @param highResIcons ; whether to use a high-resolution image for the icon
  */
 var initFullscreen = function(highResIcons) {
-    createButtonNoIcon('fullscreen', toggleFullscreen);
+    createButton('fullscreen', toggleFullscreen);
     fullscreenUI = {
         button: $('#fullscreen'),
         iconEnter: 'url(' + getIconFor('fullscreen-enter', highResIcons) + ')',
         iconExit: 'url(' + getIconFor('fullscreen-exit', highResIcons) + ')'
     };
-    fullscreenUI.button.css('background-image', fullscreenUI.iconEnter);
     document.addEventListener('fullscreenchange', prepareFullscreenIcon);
     document.addEventListener('msfullscreenchange', prepareFullscreenIcon);
     document.addEventListener('mozfullscreenchange', prepareFullscreenIcon);
