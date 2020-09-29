@@ -5,6 +5,7 @@ var visibleButtons = {
     __yudu_count: 0
 };
 var numberOfProductsSpan;
+var buttonImageIdSuffix = '-img';
 
 var toolbarInit = function() {
     registerForYuduEvents();
@@ -198,13 +199,15 @@ var createButton = function(id, callback, highResIcons) {
 
     var icon = $('<img />')
         .attr('src', iconPath)
-        .attr('id', id);
+        .attr('id', id + buttonImageIdSuffix);
 
     var altText = yudu_commonFunctions.getLocalisedStringByCode('toolbar.button.' + id);
     icon.attr('aria-label', altText.indexOf('toolbar.button.') === 0 ? id : altText).appendTo(button);
 
     newButton(id, button);
     button.insertBefore($('#rightControls'));
+
+    return button;
 };
 
 var createButtonNoIcon = function(id, callback) {
@@ -277,7 +280,9 @@ var addButtonListener = function() {
 var handleButtonPress = function(event) {
     var element = event.target;
     if (element && element.id) {
-        var callback = buttonCallbacks[element.id];
+        var elementId = element.id.endsWith(buttonImageIdSuffix)
+            ? element.id.replace(buttonImageIdSuffix, '') : element.id;
+        var callback = buttonCallbacks[elementId];
         if (typeof callback == 'function') {
             callback();
         }
@@ -316,17 +321,18 @@ var fullscreenUI;
  * @param highResIcons ; whether to use a high-resolution image for the icon
  */
 var initFullscreen = function(highResIcons) {
-    createButtonNoIcon('fullscreen', toggleFullscreen);
+    var button = createButton('fullscreen', toggleFullscreen);
     fullscreenUI = {
-        button: $('#fullscreen'),
-        iconEnter: 'url(' + getIconFor('fullscreen-enter', highResIcons) + ')',
-        iconExit: 'url(' + getIconFor('fullscreen-exit', highResIcons) + ')'
+        button: button,
+        img: $('img#fullscreen' + buttonImageIdSuffix, button),
+        iconEnter: getIconFor('fullscreen-enter', highResIcons),
+        iconExit: getIconFor('fullscreen-exit', highResIcons)
     };
-    fullscreenUI.button.css('background-image', fullscreenUI.iconEnter);
     document.addEventListener('fullscreenchange', prepareFullscreenIcon);
     document.addEventListener('msfullscreenchange', prepareFullscreenIcon);
     document.addEventListener('mozfullscreenchange', prepareFullscreenIcon);
     document.addEventListener('webkitfullscreenchange', prepareFullscreenIcon);
+    prepareFullscreenIcon();
 };
 
 /**
@@ -359,9 +365,9 @@ var toggleFullscreen = function() {
  */
 var prepareFullscreenIcon = function() {
     if (isFullscreen()) {
-        fullscreenUI.button.css('background-image', fullscreenUI.iconExit);
+        fullscreenUI.img.attr('src', fullscreenUI.iconExit);
     } else {
-        fullscreenUI.button.css('background-image', fullscreenUI.iconEnter);
+        fullscreenUI.img.attr('src', fullscreenUI.iconEnter);
     }
 };
 
