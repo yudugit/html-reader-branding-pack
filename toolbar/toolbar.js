@@ -157,7 +157,6 @@ var createButtons = function() {
         numberOfProductsSpan = $(document.createElement('span'));
         numberOfProductsSpan.css('position', 'absolute');
         numberOfProductsSpan.css('bottom', '0px');
-        numberOfProductsSpan.css('margin-left', '22px');
         numberOfProductsSpan.css('margin-bottom', (yudu_commonSettings.isDesktop ? '4' : '-4') + 'px');
         numberOfProductsSpan.css('font-size', '10px');
         createButton('shoppingCart', buttonOtherThanTogglableHit(this, yudu_toolbarFunctions.shoppingCartClicked), highResIcons);
