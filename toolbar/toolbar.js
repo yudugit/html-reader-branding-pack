@@ -278,6 +278,9 @@ var addButtonListener = function() {
  * @param event {*} fired by HammerJS, DOM event nested in `event.srcEvent`
  */
 var handleButtonPress = function(event) {
+    if (customSelectionToolbarShowing) {
+        return;
+    }
     var element = event.target;
     if (element && element.id) {
         var elementId = element.id.endsWith(buttonImageIdSuffix)
@@ -626,6 +629,9 @@ var initDownloadPdfMenu = function() {
     });
 
     setDownloadPdfMenuLeftPosition();
+
+    yudu_events.subscribe(yudu_events.ALL, yudu_events.DOWNLOAD_PDF_CUSTOM_SELECTION_TOOLBAR.TOOLBAR_TOGGLED,
+            handleCustomSelectionToolbarToggled, false);
 };
 
 var downloadPdfAction = function () {
@@ -686,6 +692,17 @@ var hideDownloadPdfMenu = function() {
     }
     toggleDownloadPdfMenu(false, false);
 };
+
+var handleCustomSelectionToolbarToggled = function(event) {
+    customSelectionToolbarShowing = event.data.showing;
+    var mainToolbarButtons = $('.control');
+    if (customSelectionToolbarShowing) {
+        mainToolbarButtons.addClass('noHover');
+    }
+    else {
+        mainToolbarButtons.removeClass('noHover');
+    }
+}
 
 /**
  * Contents controls
