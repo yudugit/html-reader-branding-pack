@@ -13,6 +13,7 @@ The exceptions to this are the "Common" and "Events" sub-interfaces, which shoul
 + [Return to the Table of Contents](../../readme.md)
 + [Common](./common.md)
 + [Contents](./contents.md)
++ [Download PDF](./downloadPdf.md)
 + [Events](./events.md)
 + [Loading](./loading.md)
 + [Search](./search.md)
