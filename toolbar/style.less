@@ -21,7 +21,7 @@
     text-align: center;
 
 
-    &:hover {cursor: pointer;}
+    &:not(.noHover):hover {cursor: pointer;}
 
     img {
       vertical-align: middle;
@@ -186,6 +186,54 @@
       .selected {
         background-color: #428bca;
         color: white;
+      }
+    }
+  }
+
+  &.isDesktop {
+    top: 34px;
+    border-radius: 0px 0px 5px 5px;
+  }
+
+  &.touchDevice {
+    bottom: 44px;
+    position: fixed;
+    border-radius: 5px 5px 0px 0px;
+  }
+}
+
+#downloadPdfMenuContainer {
+  font-family: Verdana,Tahoma,Arial,sans-serif;
+  position: absolute;
+  background-color: rgba(250, 250, 250, 0.9);
+  z-index: 1900;
+  overflow: hidden;
+  display: none;
+  width: 250px;
+  display: none;
+
+  #downloadPdfMenuButtons {
+    margin: 10px 5px 10px 5px;
+
+    .downloadPdfMenuOption {
+      position: relative;
+      cursor: pointer;
+      padding: 5px 5px;
+      border: 1px solid #baaaaa;
+      border-radius: 3px;
+      background-color: rgba(250, 250, 250, 0.9);
+      margin: 5px;
+      height: 40px;
+      width: -webkit-calc(~"100% - 22px");
+      width: calc(~"100% - 22px");
+      display: none;
+
+      span {
+        position: absolute;
+        top: -webkit-calc(~"50% - 9px");
+        top: calc(~"50% - 9px");
+        text-align: center;
+        width: calc(~"100% - 10px");
       }
     }
   }
