@@ -12,7 +12,6 @@ Its two components will be available as the following global variables:
 + `iconHighResPrefix` – the prefix added to the name of the images used for high resolution devices
 + `iconFileExtension` – the extension of the image files used for the toolbar buttons
 + `shouldUseHighRes` – `true` if the images for high resolution should be used, `false` otherwise
-+ `hasDownloadablePdfAndIsNotApp` – `true` if the edition was set up with a downloadable PDF and is not being used within an app on a device, `false` otherwise
 + `searchEnabled` – `true` if the edition was set up with search enabled, `false` otherwise
 + `editionListEnabled` – `true` if the edition was set up with the edition list (archive view) enabled and it is not being shown within an app, `false` otherwise
 + `orderFormEnabled` – `true` if the edition was set up with the order form enabled, `false` otherwise
@@ -45,8 +44,10 @@ Its two components will be available as the following global variables:
     + available only if `yudu_toolbarSettings.logoLinkUrlExists` is `true`
 + `editionListClicked` – call when the `editionList` button is clicked
     + available only if `yudu_toolbarSettings.editionListEnabled` is `true`
-+ `downloadPdfClicked` – call when the `downloadPdf` button is clicked
-    + available only if `yudu_toolbarSettings.hasDownloadablePdf` is `true`
++ `downloadPdfClicked` – call when the `downloadPdf` button is clicked if downloading a custom selection of pages is not enabled
+    + available only if `yudu_downloadPdfSettings.downloadWholePdfEnabled` is `true` and `yudu_downloadPdfSettings.downloadCustomSelectionEnabled` is `false`
++ `downloadPdfCustomSelectionClicked` - call when the `downloadPdf` button is clicked if downloading the whole PDF is not enabled
+    + available only if `yudu_downloadPdfSettings.downloadWholePdfEnabled` is `false` and `yudu_downloadPdfSettings.downloadCustomSelectionEnabled` is `true`
 + `searchClicked` – call when the `search` button is clicked
     + available only on touch devices and when `yudu_toolbarSettings.searchEnabled` is `true`
 + `goFullscreen` – call when the `fullscreen mode` button is clicked

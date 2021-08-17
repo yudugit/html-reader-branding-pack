@@ -11,6 +11,7 @@ var toolbarInit = function() {
     registerForYuduEvents();
     createBar();
     initSharing();
+    initDownloadPdfMenu();
     initContents();
     initUserPreferences();
     yudu_commonFunctions.toolbarFinishedLoading();
@@ -138,8 +139,8 @@ var createButtons = function() {
     if (yudu_toolbarSettings.sharing.emailEnabled || yudu_toolbarSettings.sharing.twitter || yudu_toolbarSettings.sharing.facebook || yudu_toolbarSettings.sharing.facebook) {
         createButton('share', toggleShareAction, highResIcons);
     }
-    if (yudu_toolbarSettings.hasDownloadablePdfAndIsNotApp) {
-        createButton('downloadPdf', buttonOtherThanTogglableHit(this, yudu_toolbarFunctions.downloadPdfClicked), highResIcons);
+    if (yudu_downloadPdfSettings.downloadWholePdfEnabled || yudu_downloadPdfSettings.downloadCustomSelectionEnabled) {
+        createButton('downloadPdf', downloadPdfAction, highResIcons);
     }
     if (yudu_toolbarSettings.searchEnabled && !yudu_commonSettings.isDesktop) {
         createButton('search', buttonOtherThanTogglableHit(this, yudu_toolbarFunctions.searchClicked), highResIcons);
@@ -277,6 +278,9 @@ var addButtonListener = function() {
  * @param event {*} fired by HammerJS, DOM event nested in `event.srcEvent`
  */
 var handleButtonPress = function(event) {
+    if (customSelectionToolbarShowing) {
+        return;
+    }
     var element = event.target;
     if (element && element.id) {
         var elementId = element.id.endsWith(buttonImageIdSuffix)
@@ -486,6 +490,7 @@ var toggleShareAction = function() {
         yudu_toolbarFunctions.setAutoHide(false);
         toggleContents(false, false);
         toggleUserPreferences(false, false);
+        toggleDownloadPdfMenu(false, false);
         yudu_thumbnailsFunctions.toggleThumbnails(false, false);
     } else {
         yudu_toolbarFunctions.setAutoHide(true);
@@ -523,6 +528,181 @@ var hideSharing = function() {
     }
     toggleSharing(false, false);
 };
+
+/**
+ * Download pdf controls
+ */
+var downloadPdfMenuShowing = false;
+var downloadPdfMenuUI = {};
+var numberOfEnabledDownloadPdfOptions = 0;
+var singleDownloadPdfOptionCallback;
+var customSelectionToolbarShowing = false;
+
+var initDownloadPdfMenu = function() {
+    var downloadPdfOptions = {
+        wholePdf: {
+            name: 'wholePdf',
+            toolbarCallback: yudu_toolbarFunctions.downloadPdfClicked,
+            menuCallback: yudu_downloadPdfFunctions.downloadWholePdfClicked,
+            enabled: yudu_downloadPdfSettings.downloadWholePdfEnabled
+        },
+        customSelection: {
+            name: 'customSelection',
+            toolbarCallback: yudu_toolbarFunctions.downloadPdfCustomSelectionClicked,
+            menuCallback: yudu_downloadPdfFunctions.downloadCustomSelectionClicked,
+            enabled: yudu_downloadPdfSettings.downloadCustomSelectionEnabled
+        },
+        bookmarkSelection: {
+            name: 'bookmarkSelection',
+            // There is no toolbarCallback because bookmarkSelection cannot be enabled on its own
+            menuCallback: yudu_downloadPdfFunctions.downloadBookmarkSelectionClicked,
+            enabled: yudu_downloadPdfSettings.downloadBookmarkSelectionEnabled
+        }
+    };
+
+    numberOfEnabledDownloadPdfOptions = Object.values(downloadPdfOptions)
+            .reduce(function(accumulator, currentValue) {
+                return accumulator + (currentValue.enabled ? 1 : 0);
+            }, 0);
+
+    if (numberOfEnabledDownloadPdfOptions === 0) {
+        return;
+    }
+
+    if (numberOfEnabledDownloadPdfOptions === 1) {
+        var enabledDownloadPdfOption = downloadPdfOptions[Object.keys(downloadPdfOptions)
+                .find(function(optionKey) {
+                    return downloadPdfOptions[optionKey].enabled;
+                })];
+        singleDownloadPdfOptionCallback = buttonOtherThanTogglableHit(this, enabledDownloadPdfOption.toolbarCallback);
+        return;
+    }
+
+    downloadPdfMenuUI = {
+        //downloadPdf button on the toolbar
+        downloadPdfButton: $('#downloadPdf'),
+        //DownloadPdfMenu sheet drop down elements
+        dropdown: {
+            container: $('#downloadPdfMenuContainer'),
+            wholePdf: $('#wholePdf'),
+            customSelection: $('#customSelection'),
+            bookmarkSelection: $('#bookmarkSelection')
+        }
+    };
+
+    var downloadPdfMenuCallbacks = {};
+
+    /**
+     * Callback for taps on the downloadPdfMenu popup
+     * @param event {*} fired by HammerJS, DOM event nested in `event.srcEvent`
+     */
+    var handleDownloadPdfMenuInteraction = function(event) {
+        var id = event.target.id;
+        if (id && downloadPdfMenuCallbacks[id] && typeof downloadPdfMenuCallbacks[id] == 'function') {
+            downloadPdfMenuCallbacks[id](event);
+        }
+    };
+
+    /**
+     * Create a callback for when a downloadPdfMenu button is activated
+     * Wraps a callback in shared code to manage the UI changes
+     * @param buttonCallback {Function} that triggers any unique behaviour assigned to the button
+     * @returns {Function} that expects a HammerJS event, and passes it on
+     */
+    var downloadPdfMenuCallback = function(buttonCallback) {
+        return function(event) {
+            hideDownloadPdfMenu();
+            typeof buttonCallback == 'function' && buttonCallback(event);
+            yudu_commonFunctions.hideToolbar();
+        }
+    };
+
+    downloadPdfMenuUI.dropdown.container.addClass(yudu_commonSettings.isDesktop ? "isDesktop" : "touchDevice");
+    var downloadPdfMenuManager = yudu_commonFunctions.createHammerJSTapManager(downloadPdfMenuUI.dropdown.container[0]);
+    downloadPdfMenuManager.on('tap', handleDownloadPdfMenuInteraction);
+
+    Object.values(downloadPdfOptions).forEach(function(option) {
+        if (option.enabled) {
+            downloadPdfMenuUI.dropdown[option.name].show();
+            downloadPdfMenuCallbacks[option.name] = downloadPdfMenuCallback(option.menuCallback);
+        }
+    });
+
+    setDownloadPdfMenuLeftPosition();
+
+    yudu_events.subscribe(yudu_events.ALL, yudu_events.DOWNLOAD_PDF_CUSTOM_SELECTION_TOOLBAR.TOOLBAR_TOGGLED,
+            handleCustomSelectionToolbarToggled, false);
+};
+
+var downloadPdfAction = function () {
+    if (numberOfEnabledDownloadPdfOptions === 0) {
+        // This condition should never be met because there should be no toolbar button to trigger this action, but it's
+        // handled for completion
+        return;
+    }
+    if (numberOfEnabledDownloadPdfOptions === 1) {
+        singleDownloadPdfOptionCallback();
+        return;
+    }
+    toggleDownloadPdfMenuAction();
+}
+
+var toggleDownloadPdfMenuAction = function() {
+    if (toggleDownloadPdfMenu(true)) {
+        yudu_toolbarFunctions.setAutoHide(false);
+        yudu_thumbnailsFunctions.toggleThumbnails(false, false);
+        toggleSharing(false, false);
+        toggleUserPreferences(false, false);
+        toggleContents(false, false);
+    } else {
+        yudu_toolbarFunctions.setAutoHide(true);
+    }
+};
+
+var toggleDownloadPdfMenu = function(toggle, show) {
+    var shouldShow = toggle ? !downloadPdfMenuShowing : show;
+
+    if (shouldShow == downloadPdfMenuShowing) {
+        return downloadPdfMenuShowing;
+    }
+    if (shouldShow) {
+        downloadPdfMenuUI.dropdown.container.show();
+    } else {
+        downloadPdfMenuUI.dropdown.container.hide();
+    }
+    downloadPdfMenuShowing = shouldShow;
+    setDownloadPdfMenuLeftPosition();
+    return downloadPdfMenuShowing;
+};
+
+var setDownloadPdfMenuLeftPosition = function() {
+    if (!downloadPdfMenuShowing) {
+        return;
+    }
+
+    var downloadPdfMenuButtonLeft = downloadPdfMenuUI.downloadPdfButton.offset().left;
+    var downloadPdfMenuLeft = Math.min(downloadPdfMenuButtonLeft,
+            yudu_commonSettings.width / yudu_commonSettings.pixelDensity - downloadPdfMenuUI.dropdown.container.width() - 10);
+    downloadPdfMenuUI.dropdown.container.css({"left": downloadPdfMenuLeft});
+};
+
+var hideDownloadPdfMenu = function() {
+    if (!downloadPdfMenuShowing) {
+        return;
+    }
+    toggleDownloadPdfMenu(false, false);
+};
+
+var handleCustomSelectionToolbarToggled = function(event) {
+    customSelectionToolbarShowing = event.data.showing;
+    var mainToolbarButtons = $('.control');
+    if (customSelectionToolbarShowing) {
+        mainToolbarButtons.addClass('noHover');
+    }
+    else {
+        mainToolbarButtons.removeClass('noHover');
+    }
+}
 
 /**
  * Contents controls
@@ -628,6 +808,7 @@ var toggleContentsAction = function() {
         yudu_thumbnailsFunctions.toggleThumbnails(false, false);
         toggleSharing(false, false);
         toggleUserPreferences(false, false);
+        toggleDownloadPdfMenu(false, false);
     } else {
         yudu_toolbarFunctions.setAutoHide(true);
     }
@@ -725,6 +906,7 @@ var toggleUserPreferencesAction = function() {
         yudu_toolbarFunctions.setAutoHide(false);
         toggleSharing(false, false);
         toggleContents(false, false);
+        toggleDownloadPdfMenu(false, false);
         yudu_thumbnailsFunctions.toggleThumbnails(false, false);
     } else {
         yudu_toolbarFunctions.setAutoHide(true);
@@ -835,12 +1017,14 @@ var onResize = function () {
 
 var setTogglableLeftPosition = function() {
     setSharingLeftPosition();
+    setDownloadPdfMenuLeftPosition();
     setContentsLeftPosition();
     setUserPreferencesLeftPosition();
 };
 
 var hideTogglables = function() {
     hideSharing();
+    hideDownloadPdfMenu();
     hideContents();
     hideUserPreferences();
     hideThumbnails();
