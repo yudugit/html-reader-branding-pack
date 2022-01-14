@@ -108,6 +108,7 @@
             var bodyHeight = document.body.scrollHeight;
             var textHeight = document.getElementById('productName').offsetHeight +
                              document.getElementById('productPrice').offsetHeight +
+                             document.getElementById('productStockLevel').offsetHeight +
                              document.getElementById('productDescription').offsetHeight;
 
             imageHolder.style.width = (document.getElementById('contents').offsetWidth - 20) + "px";
@@ -123,6 +124,7 @@
 <div id="contents">
     <div id="productName"></div>
     <div id="productPrice"></div>
+    <div id="productStockLevel"></div>
     <div id="productDescription"></div>
     <div id="productImage"></div>
 </div>
