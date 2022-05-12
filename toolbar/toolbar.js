@@ -172,6 +172,10 @@ var createButtons = function() {
         createButton('userPreferences', toggleUserPreferencesAction, highResIcons);
     }
 
+    if (!yudu_toolbarSettings.infoScreenDisabled) {
+        createButton('help', buttonOtherThanTogglableHit(this, yudu_toolbarFunctions.helpClicked), highResIcons);
+    }
+
     //the fitPage button is the toggled version of the fitWidth so hide it by default
     hideButton('fitPage');
 
