@@ -28,6 +28,7 @@ var registerForYuduEvents = function() {
     } else {
         yudu_events.subscribe(yudu_events.ALL, yudu_events.TOOLBAR.SEARCH_READY, searchSetup, false);
     }
+    yudu_events.subscribe(yudu_events.ALL, yudu_events.TOOLBAR.BUTTON_TRIGGER_KEY_PRESSED, handleButtonTriggerKeyPressed, false);
 };
 
 var fitWidthOrScreenAction = function(event) {
@@ -1054,6 +1055,23 @@ var buttonOtherThanTogglableHit = function(scope, callback) {
         return callback.apply(scope, args);
     };
 };
+
+var handleButtonTriggerKeyPressed = function() {
+    var activeElementId = document.activeElement.id;
+    if (!activeElementId) {
+        return;
+    }
+
+    if (buttons.hasOwnProperty(activeElementId)) {
+        var callback = buttonCallbacks[activeElementId];
+        if (typeof callback == 'function') {
+            callback();
+        }
+    }
+    else if (activeElementId === 'logoLink' && yudu_toolbarSettings.logoLinkUrlExists) {
+        yudu_toolbarFunctions.logoClicked();
+    }
+}
 
 
 var cssFiles = [yudu_commonFunctions.createBrandingPath('toolbar/style.css')];
