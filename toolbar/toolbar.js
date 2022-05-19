@@ -194,7 +194,7 @@ var createButtons = function() {
 
 var createButton = function(id, callback, highResIcons) {
     var iconPath = getIconFor(id, highResIcons);
-    var button = $('<a type="button" class="control" id="' + id + '"></a>');
+    var button = $('<a type="button" class="control" tabindex="0" id="' + id + '"></a>');
     if (!yudu_commonSettings.isDesktop) {
         button.addClass('touchControl');
     }
