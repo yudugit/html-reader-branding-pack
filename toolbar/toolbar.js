@@ -208,10 +208,22 @@ var createButton = function(id, callback, highResIcons) {
     var altText = yudu_commonFunctions.getLocalisedStringByCode('toolbar.button.' + id);
     icon.attr('aria-label', altText.indexOf('toolbar.button.') === 0 ? id : altText).appendTo(button);
 
+    icon.on('load', function() {
+        setButtonIconPadding(icon);
+    });
+
     newButton(id, button);
     button.insertBefore($('#rightControls'));
 
     return button;
+};
+
+var setButtonIconPadding = function(icon) {
+    var iconHeight = parseFloat(icon.css('height'));
+    var iconMaxHeight = parseFloat(icon.css('max-height'));
+    var verticalPadding = (iconMaxHeight - iconHeight) / 2;
+    icon.css('padding-top', verticalPadding);
+    icon.css('padding-bottom', verticalPadding);
 };
 
 var createButtonNoIcon = function(id, callback) {
@@ -249,6 +261,7 @@ var showButton = function(id) {
             visibleButtons[id] = buttons[id];
             visibleButtons.__yudu_count += 1;
         }
+        setButtonIconPadding(buttons[id].find('img'));
     }
 };
 
