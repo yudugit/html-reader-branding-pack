@@ -101,7 +101,7 @@ var showLogo = function() {
     if (yudu_toolbarSettings.logoLinkUrlExists) {
         logoLink.click(yudu_toolbarFunctions.logoClicked);
     }
-    logoLink.show();
+    logoLink.css('display', 'inline-block');
 };
 
 var showSearchBar = function() {
