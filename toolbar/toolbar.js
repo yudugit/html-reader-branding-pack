@@ -97,13 +97,19 @@ var showLogo = function() {
     var logoImage = $("<img>");
     logoImage.attr('src', yudu_toolbarSettings.logoSrc);
     logoImage.attr('id', 'logoImage');
+    logoImage.attr('aria-hidden', true);
 
-    var logoLink = $("#logoLink");
+    var logoLinkId = 'logoLink';
+    var logoLink = $("#" + logoLinkId);
     logoLink.append(logoImage);
     if (yudu_toolbarSettings.logoLinkUrlExists) {
         logoLink.click(yudu_toolbarFunctions.logoClicked);
     }
     logoLink.css('display', 'inline-block');
+
+    var ariaLabel = yudu_commonFunctions.getLocalisedStringByCode('toolbar.button.' + logoLinkId);
+    ariaLabel = ariaLabel.indexOf('toolbar.button.') === 0 ? logoLinkId : ariaLabel;
+    logoLink.attr('aria-label', ariaLabel);
 };
 
 var showSearchBar = function() {
