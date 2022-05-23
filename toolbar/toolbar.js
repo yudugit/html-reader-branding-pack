@@ -202,7 +202,7 @@ var createButtons = function() {
 
 var createButton = function(id, callback, highResIcons) {
     var iconPath = getIconFor(id, highResIcons);
-    var button = $('<a type="button" class="control" tabindex="0" id="' + id + '"></a>');
+    var button = $('<a type="button" class="control" tabindex="0" id="' + id + '" role="button"></a>');
     if (!yudu_commonSettings.isDesktop) {
         button.addClass('touchControl');
     }
@@ -211,10 +211,13 @@ var createButton = function(id, callback, highResIcons) {
 
     var icon = $('<img />')
         .attr('src', iconPath)
-        .attr('id', id + buttonImageIdSuffix);
+        .attr('id', id + buttonImageIdSuffix)
+        .attr('aria-hidden', true);
 
     var altText = yudu_commonFunctions.getLocalisedStringByCode('toolbar.button.' + id);
-    icon.attr('aria-label', altText.indexOf('toolbar.button.') === 0 ? id : altText).appendTo(button);
+    altText = altText.indexOf('toolbar.button.') === 0 ? id : altText;
+    icon.attr('alt', altText).appendTo(button);
+    button.attr('aria-label', altText);
 
     icon.on('load', function() {
         setButtonIconPadding(icon);
