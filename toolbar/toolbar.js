@@ -88,6 +88,7 @@ var createBar = function() {
     } else {
         controls.addClass('touchDevice');
     }
+    controls.attr('aria-label', yudu_commonFunctions.getLocalisedStringByCode('toolbar.ariaLabel'));
     createButtons();
     addButtonListener();
 };
