@@ -113,11 +113,14 @@ var showLogo = function() {
 };
 
 var showSearchBar = function() {
-    $("#desktopSearchContainer").css("display", "inline-block");
+    var searchContainer = $('#desktopSearchContainer');
+    searchContainer.css("display", "inline-block");
+    searchContainer.attr('aria-label', yudu_commonFunctions.getLocalisedStringByCode('search.desktop.container.ariaLabel'));
 
     var iconPath = getIconFor('search');
     var button = $('#desktopSearchGo');
     button.css('background-image', 'url(' + iconPath + ')');
+    button.attr('aria-label', yudu_commonFunctions.getLocalisedStringByCode('search.desktop.button.ariaLabel'));
 };
 
 var createButtons = function() {
