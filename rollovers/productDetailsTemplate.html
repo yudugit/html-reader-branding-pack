@@ -107,6 +107,7 @@
 
             var bodyHeight = document.body.scrollHeight;
             var textHeight = document.getElementById('productName').offsetHeight +
+                             document.getElementById('productCode').offsetHeight +
                              document.getElementById('productPrice').offsetHeight +
                              document.getElementById('productStockLevel').offsetHeight +
                              document.getElementById('productDescription').offsetHeight;
@@ -123,6 +124,7 @@
 <body>
 <div id="contents">
     <div id="productName"></div>
+    <div id="productCode"></div>
     <div id="productPrice"></div>
     <div id="productStockLevel"></div>
     <div id="productDescription"></div>
