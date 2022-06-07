@@ -28,6 +28,7 @@ var registerForYuduEvents = function() {
     } else {
         yudu_events.subscribe(yudu_events.ALL, yudu_events.TOOLBAR.SEARCH_READY, searchSetup, false);
     }
+    yudu_events.subscribe(yudu_events.ALL, yudu_events.TOOLBAR.BUTTON_TRIGGER_KEY_PRESSED, handleButtonTriggerKeyPressed, false);
 };
 
 var fitWidthOrScreenAction = function(event) {
@@ -101,7 +102,7 @@ var showLogo = function() {
     if (yudu_toolbarSettings.logoLinkUrlExists) {
         logoLink.click(yudu_toolbarFunctions.logoClicked);
     }
-    logoLink.show();
+    logoLink.css('display', 'inline-block');
 };
 
 var showSearchBar = function() {
@@ -194,7 +195,7 @@ var createButtons = function() {
 
 var createButton = function(id, callback, highResIcons) {
     var iconPath = getIconFor(id, highResIcons);
-    var button = $('<a type="button" class="control" id="' + id + '"></a>');
+    var button = $('<a type="button" class="control" tabindex="0" id="' + id + '"></a>');
     if (!yudu_commonSettings.isDesktop) {
         button.addClass('touchControl');
     }
@@ -208,10 +209,22 @@ var createButton = function(id, callback, highResIcons) {
     var altText = yudu_commonFunctions.getLocalisedStringByCode('toolbar.button.' + id);
     icon.attr('aria-label', altText.indexOf('toolbar.button.') === 0 ? id : altText).appendTo(button);
 
+    icon.on('load', function() {
+        setButtonIconPadding(icon);
+    });
+
     newButton(id, button);
     button.insertBefore($('#rightControls'));
 
     return button;
+};
+
+var setButtonIconPadding = function(icon) {
+    var iconHeight = parseFloat(icon.css('height'));
+    var iconMaxHeight = parseFloat(icon.css('max-height'));
+    var verticalPadding = (iconMaxHeight - iconHeight) / 2;
+    icon.css('padding-top', verticalPadding);
+    icon.css('padding-bottom', verticalPadding);
 };
 
 var createButtonNoIcon = function(id, callback) {
@@ -249,6 +262,7 @@ var showButton = function(id) {
             visibleButtons[id] = buttons[id];
             visibleButtons.__yudu_count += 1;
         }
+        setButtonIconPadding(buttons[id].find('img'));
     }
 };
 
@@ -1041,6 +1055,23 @@ var buttonOtherThanTogglableHit = function(scope, callback) {
         return callback.apply(scope, args);
     };
 };
+
+var handleButtonTriggerKeyPressed = function() {
+    var activeElementId = document.activeElement.id;
+    if (!activeElementId) {
+        return;
+    }
+
+    if (buttons.hasOwnProperty(activeElementId)) {
+        var callback = buttonCallbacks[activeElementId];
+        if (typeof callback == 'function') {
+            callback();
+        }
+    }
+    else if (activeElementId === 'logoLink' && yudu_toolbarSettings.logoLinkUrlExists) {
+        yudu_toolbarFunctions.logoClicked();
+    }
+}
 
 
 var cssFiles = [yudu_commonFunctions.createBrandingPath('toolbar/style.css')];
