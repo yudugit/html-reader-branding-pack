@@ -88,6 +88,7 @@ var createBar = function() {
     } else {
         controls.addClass('touchDevice');
     }
+    controls.attr('aria-label', yudu_commonFunctions.getLocalisedStringByCode('toolbar.ariaLabel'));
     createButtons();
     addButtonListener();
 };
@@ -96,21 +97,30 @@ var showLogo = function() {
     var logoImage = $("<img>");
     logoImage.attr('src', yudu_toolbarSettings.logoSrc);
     logoImage.attr('id', 'logoImage');
+    logoImage.attr('aria-hidden', true);
 
-    var logoLink = $("#logoLink");
+    var logoLinkId = 'logoLink';
+    var logoLink = $("#" + logoLinkId);
     logoLink.append(logoImage);
     if (yudu_toolbarSettings.logoLinkUrlExists) {
         logoLink.click(yudu_toolbarFunctions.logoClicked);
     }
     logoLink.css('display', 'inline-block');
+
+    var ariaLabel = yudu_commonFunctions.getLocalisedStringByCode('toolbar.button.' + logoLinkId);
+    ariaLabel = ariaLabel.indexOf('toolbar.button.') === 0 ? logoLinkId : ariaLabel;
+    logoLink.attr('aria-label', ariaLabel);
 };
 
 var showSearchBar = function() {
-    $("#desktopSearchContainer").css("display", "inline-block");
+    var searchContainer = $('#desktopSearchContainer');
+    searchContainer.css("display", "inline-block");
+    searchContainer.attr('aria-label', yudu_commonFunctions.getLocalisedStringByCode('search.desktop.container.ariaLabel'));
 
     var iconPath = getIconFor('search');
     var button = $('#desktopSearchGo');
     button.css('background-image', 'url(' + iconPath + ')');
+    button.attr('aria-label', yudu_commonFunctions.getLocalisedStringByCode('search.desktop.button.ariaLabel'));
 };
 
 var createButtons = function() {
@@ -195,7 +205,7 @@ var createButtons = function() {
 
 var createButton = function(id, callback, highResIcons) {
     var iconPath = getIconFor(id, highResIcons);
-    var button = $('<a type="button" class="control" tabindex="0" id="' + id + '"></a>');
+    var button = $('<a type="button" class="control" tabindex="0" id="' + id + '" role="button"></a>');
     if (!yudu_commonSettings.isDesktop) {
         button.addClass('touchControl');
     }
@@ -204,10 +214,13 @@ var createButton = function(id, callback, highResIcons) {
 
     var icon = $('<img />')
         .attr('src', iconPath)
-        .attr('id', id + buttonImageIdSuffix);
+        .attr('id', id + buttonImageIdSuffix)
+        .attr('aria-hidden', true);
 
     var altText = yudu_commonFunctions.getLocalisedStringByCode('toolbar.button.' + id);
-    icon.attr('aria-label', altText.indexOf('toolbar.button.') === 0 ? id : altText).appendTo(button);
+    altText = altText.indexOf('toolbar.button.') === 0 ? id : altText;
+    icon.attr('alt', altText).appendTo(button);
+    button.attr('aria-label', altText);
 
     icon.on('load', function() {
         setButtonIconPadding(icon);
