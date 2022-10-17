@@ -21,6 +21,7 @@
     background: transparent no-repeat center;
     background-size: contain;
     outline: none;
+    width: 20%;
     min-width: 24px;
     height: 24px;
     display: inline-block;
@@ -30,22 +31,44 @@
     &.touchDevice {
       height: 34px;
     }
+  }
 
-    &:first-child {
-      text-align: left;
-      width: 33%;
-      padding-left: 1em;
-    }
+  #downloadPdfCustomSelectionCancel {
+    text-align: left;
+    float: left;
+    padding-left: 1em;
+  }
 
-    &:nth-child(2) {
-      text-align: center;
-      width: 34%;
-    }
+  #downloadPdfCustomSelectionSelect {
+    text-align: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
 
-    &:last-child {
-      text-align: right;
-      width: 33%;
-      padding-right: 1em;
-    }
+  #downloadPdfCustomSelectionDone{
+    text-align: right;
+    float: right;
+    padding-right: 1em;
+  }
+
+  .downloadPdfCustomSelectionCheckbox {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+  }
+
+  #downloadPdfCustomSelectionLeftCheck {
+    position: absolute;
+    left: 30%;
+    transform: translateX(-50%);
+  }
+  #downloadPdfCustomSelectionRightCheck {
+    position: absolute;
+    left: 70%;
+    transform: translateX(-50%);
   }
 }
