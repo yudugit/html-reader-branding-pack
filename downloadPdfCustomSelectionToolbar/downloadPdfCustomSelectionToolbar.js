@@ -14,6 +14,8 @@ var downloadPdfCustomSelectionToolbarInit = function() {
     addDownloadPdfCustomSelectionToolbarButtonEventListeners();
     yudu_events.subscribe(yudu_events.ALL, yudu_events.DOWNLOAD_PDF_CUSTOM_SELECTION_TOOLBAR.UPDATE_SELECT_BUTTON_LABEL,
             updateDownloadPdfCustomSelectionToolbarSelectButtonLabel, false);
+    yudu_events.subscribe(yudu_events.ALL, yudu_events.DOWNLOAD_PDF_CUSTOM_SELECTION_TOOLBAR.UPDATE_CURRENT_PAGES,
+        updateDownloadPdfCustomSelectionIndicators, false);
     if (!yudu_commonSettings.isDesktop) {
         downloadPdfCustomSelectionToolbar.addClass('touchDevice');
         downloadPdfCustomSelectionToolbarButtons.all.addClass('touchDevice');
@@ -43,6 +45,13 @@ var updateDownloadPdfCustomSelectionToolbarSelectButtonLabel = function(event) {
     }
 };
 
+var updateDownloadPdfCustomSelectionIndicators = function (event) {
+    if (event.data.leftPageNumber == null || event.data.rightPageNumber == null || event.data.leftPageNumber === 0) {
+        downloadPdfCustomSelectionCheckBoxes.left.css('visibility', 'hidden');
+    } else {
+        downloadPdfCustomSelectionCheckBoxes.left.css('visibility', 'visible');
+    }
+}
 
 var cssFiles = [yudu_commonFunctions.createBrandingPath('downloadPdfCustomSelectionToolbar/style.css')];
 yudu_commonFunctions.loadCss(cssFiles, downloadPdfCustomSelectionToolbarInit);
