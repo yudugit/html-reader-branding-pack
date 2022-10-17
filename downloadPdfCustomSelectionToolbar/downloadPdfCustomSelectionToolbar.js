@@ -5,6 +5,10 @@ var downloadPdfCustomSelectionToolbarButtons = {
     done: $('#downloadPdfCustomSelectionDone'),
     all: $('.downloadPdfCustomSelectionButton')
 };
+var downloadPdfCustomSelectionCheckBoxes = {
+    left: $('#downloadPdfCustomSelectionLeftCheck'),
+    right: $('#downloadPdfCustomSelectionRightCheck')
+}
 
 var downloadPdfCustomSelectionToolbarInit = function() {
     addDownloadPdfCustomSelectionToolbarButtonEventListeners();
@@ -30,6 +34,13 @@ var addDownloadPdfCustomSelectionToolbarButtonEventListeners = function() {
 
 var updateDownloadPdfCustomSelectionToolbarSelectButtonLabel = function(event) {
     downloadPdfCustomSelectionToolbarButtons.select.text(event.data.newLabel);
+    if (event.data.newLabel == "Unselect") {
+        downloadPdfCustomSelectionCheckBoxes.left.prop('checked', true);
+        downloadPdfCustomSelectionCheckBoxes.right.prop('checked', true);
+    } else {
+        downloadPdfCustomSelectionCheckBoxes.left.prop('checked', false);
+        downloadPdfCustomSelectionCheckBoxes.right.prop('checked', false);
+    }
 };
 
 
