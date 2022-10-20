@@ -90,6 +90,12 @@ var createBar = function() {
         if (yudu_toolbarSettings.searchEnabled) {
             showSearchBar();
         }
+        if (yudu_toolbarSettings.logoutEnabled) {
+            createDesktopLogoutButton();
+            if (!userLoggedIn) {
+                hideButton('logout');
+            }
+        }
     } else {
         controls.addClass('touchDevice');
     }
@@ -126,6 +132,31 @@ var showSearchBar = function() {
     var button = $('#desktopSearchGo');
     button.css('background-image', 'url(' + iconPath + ')');
     button.attr('aria-label', yudu_commonFunctions.getLocalisedStringByCode('search.desktop.button.ariaLabel'));
+};
+
+var createDesktopLogoutButton = function() {
+    var id = 'logout';
+    var iconPath = getIconFor(id, yudu_toolbarSettings.shouldUseHighRes);
+    var button = $('<a type="button" class="control" tabindex="0" id="' + id + '" role="button"></a>');
+
+    buttonCallbacks[id] = buttonOtherThanTogglableHit(this, yudu_toolbarFunctions.logoutClicked);
+
+    var icon = $('<img />')
+        .attr('src', iconPath)
+        .attr('id', id + buttonImageIdSuffix)
+        .attr('aria-hidden', true);
+
+    var altText = yudu_commonFunctions.getLocalisedStringByCode('toolbar.button.' + id);
+    altText = altText.indexOf('toolbar.button.') === 0 ? id : altText;
+    icon.attr('alt', altText).appendTo(button);
+    button.attr('aria-label', altText);
+
+    icon.on('load', function() {
+        setButtonIconPadding(icon);
+    });
+
+    newButton(id, button);
+    button.insertBefore($('#desktopSearchContainer'));
 };
 
 var createButtons = function() {
