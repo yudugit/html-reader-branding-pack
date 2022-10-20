@@ -7,6 +7,8 @@ var visibleButtons = {
 var numberOfProductsSpan;
 var buttonImageIdSuffix = '-img';
 
+var userLoggedIn = false;
+
 var toolbarInit = function() {
     registerForYuduEvents();
     createBar();
@@ -29,6 +31,9 @@ var registerForYuduEvents = function() {
         yudu_events.subscribe(yudu_events.ALL, yudu_events.TOOLBAR.SEARCH_READY, searchSetup, false);
     }
     yudu_events.subscribe(yudu_events.ALL, yudu_events.TOOLBAR.BUTTON_TRIGGER_KEY_PRESSED, handleButtonTriggerKeyPressed, false);
+    if (yudu_toolbarSettings.logoutEnabled) {
+        yudu_events.subscribe(yudu_events.ALL, yudu_events.COMMON.LOGIN_SUCCESS, handleLoginSuccess, false);
+    }
 };
 
 var fitWidthOrScreenAction = function(event) {
@@ -1084,6 +1089,11 @@ var handleButtonTriggerKeyPressed = function() {
     else if (activeElementId === 'logoLink' && yudu_toolbarSettings.logoLinkUrlExists) {
         yudu_toolbarFunctions.logoClicked();
     }
+}
+
+var handleLoginSuccess = function() {
+    userLoggedIn = true;
+    showButton('logout');
 }
 
 
