@@ -46,10 +46,16 @@ var updateDownloadPdfCustomSelectionToolbarSelectButtonLabel = function(event) {
 };
 
 var updateDownloadPdfCustomSelectionIndicators = function (event) {
-    if (event.data.leftPageNumber == null || event.data.rightPageNumber == null || event.data.leftPageNumber === 0) {
+    if (event.data.leftPageNumber == null || event.data.leftPageNumber === 0) {
         downloadPdfCustomSelectionCheckBoxes.left.css('visibility', 'hidden');
     } else {
         downloadPdfCustomSelectionCheckBoxes.left.css('visibility', 'visible');
+    }
+
+    if (event.data.rightPageNumber == null) {
+        downloadPdfCustomSelectionCheckBoxes.right.css('visibility', 'hidden');
+    } else {
+        downloadPdfCustomSelectionCheckBoxes.right.css('visibility', 'visible');
     }
 }
 
