@@ -36,7 +36,7 @@ var addDownloadPdfCustomSelectionToolbarButtonEventListeners = function() {
 
 var updateDownloadPdfCustomSelectionToolbarSelectButtonLabel = function(event) {
     downloadPdfCustomSelectionToolbarButtons.select.text(event.data.newLabel);
-    if (event.data.newLabel == "Unselect") {
+    if (event.data.pageSpreadSelected) {
         downloadPdfCustomSelectionCheckBoxes.left.prop('checked', true);
         downloadPdfCustomSelectionCheckBoxes.right.prop('checked', true);
     } else {
