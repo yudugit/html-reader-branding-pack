@@ -654,8 +654,9 @@ var initDownloadPdfMenu = function() {
 
     Object.values(downloadPdfOptions).forEach(function(option) {
         if (option.enabled) {
-            downloadPdfMenuUI.dropdown[option.name].show();
             downloadPdfMenuCallbacks[option.name] = downloadPdfMenuCallback(option.menuCallback);
+        } else {
+            downloadPdfMenuUI.dropdown[option.name].hide();
         }
     });
 
