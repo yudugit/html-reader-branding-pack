@@ -52,7 +52,7 @@ var updateDownloadPdfCustomSelectionIndicators = function (event) {
         downloadPdfCustomSelectionCheckBoxes.left.css('visibility', 'visible');
     }
 
-    if (event.data.rightPageNumber == null) {
+    if (event.data.rightPageNumber == null && event.data.leftPageNumber !== 0) {
         downloadPdfCustomSelectionCheckBoxes.right.css('visibility', 'hidden');
     } else {
         downloadPdfCustomSelectionCheckBoxes.right.css('visibility', 'visible');
