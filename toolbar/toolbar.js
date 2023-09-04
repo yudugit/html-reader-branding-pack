@@ -838,6 +838,7 @@ var renderContentsElement = function(contentsElementData) {
     contentsLink.addClass('contentsLink');
     contentsLink.html(contentsElementData.description);
     contentsLink.attr('data-id', contentsId);
+    contentsLink.attr('tabindex', '0');
 
     var lineBreak = $('<hr>');
 
