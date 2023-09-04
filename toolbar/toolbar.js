@@ -1111,6 +1111,13 @@ var buttonOtherThanTogglableHit = function(scope, callback) {
 var handleButtonTriggerKeyPressed = function() {
     var activeElementId = document.activeElement.id;
     if (!activeElementId) {
+        if (document.activeElement.classList.contains('contentsLink') && document.activeElement.hasAttribute('data-id')) {
+            var callback = contentsCallbacks[document.activeElement.getAttribute('data-id')];
+            document.activeElement.blur();
+            if (typeof callback == 'function') {
+                callback();
+            }
+        }
         return;
     }
 
