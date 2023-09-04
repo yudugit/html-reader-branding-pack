@@ -878,6 +878,7 @@ var toggleContentsAction = function() {
         toggleSharing(false, false);
         toggleUserPreferences(false, false);
         toggleDownloadPdfMenu(false, false);
+        $('[data-id = contentsItem0]').focus();
     } else {
         yudu_toolbarFunctions.setAutoHide(true);
     }
