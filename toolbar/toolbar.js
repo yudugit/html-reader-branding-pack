@@ -31,6 +31,8 @@ var registerForYuduEvents = function() {
         yudu_events.subscribe(yudu_events.ALL, yudu_events.TOOLBAR.SEARCH_READY, searchSetup, false);
     }
     yudu_events.subscribe(yudu_events.ALL, yudu_events.TOOLBAR.BUTTON_TRIGGER_KEY_PRESSED, handleButtonTriggerKeyPressed, false);
+    yudu_events.subscribe(yudu_events.ALL, yudu_events.TOOLBAR.PREV_TOC_ITEM, prevTocItem, false);
+    yudu_events.subscribe(yudu_events.ALL, yudu_events.TOOLBAR.NEXT_TOC_ITEM, nextTocItem, false);
     if (yudu_toolbarSettings.logoutEnabled) {
         yudu_events.subscribe(yudu_events.ALL, yudu_events.COMMON.LOGIN_SUCCESS, handleLoginSuccess, false);
     }
@@ -1135,6 +1137,22 @@ var handleButtonTriggerKeyPressed = function() {
 var handleLoginSuccess = function() {
     userLoggedIn = true;
     showButton('logout');
+}
+
+var nextTocItem = function() {
+    var activeElement = document.activeElement;
+    if (activeElement.classList.contains("contentsLink")) {
+        var contentsElementId = parseInt(activeElement.getAttribute('data-id').slice(12));
+        $('[data-id = contentsItem' + (contentsElementId + 1) + ']').focus();
+    }
+}
+
+var prevTocItem = function() {
+    var activeElement = document.activeElement;
+    if (activeElement.classList.contains("contentsLink")) {
+        var contentsElementId = parseInt(activeElement.getAttribute('data-id').slice(12));
+        $('[data-id = contentsItem' + (contentsElementId - 1) + ']').focus();
+    }
 }
 
 
