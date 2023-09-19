@@ -31,6 +31,8 @@ var registerForYuduEvents = function() {
         yudu_events.subscribe(yudu_events.ALL, yudu_events.TOOLBAR.SEARCH_READY, searchSetup, false);
     }
     yudu_events.subscribe(yudu_events.ALL, yudu_events.TOOLBAR.BUTTON_TRIGGER_KEY_PRESSED, handleButtonTriggerKeyPressed, false);
+    yudu_events.subscribe(yudu_events.ALL, yudu_events.TOOLBAR.PREV_TOC_ITEM, prevTocItem, false);
+    yudu_events.subscribe(yudu_events.ALL, yudu_events.TOOLBAR.NEXT_TOC_ITEM, nextTocItem, false);
     if (yudu_toolbarSettings.logoutEnabled) {
         yudu_events.subscribe(yudu_events.ALL, yudu_events.COMMON.LOGIN_SUCCESS, handleLoginSuccess, false);
     }
@@ -838,6 +840,7 @@ var renderContentsElement = function(contentsElementData) {
     contentsLink.addClass('contentsLink');
     contentsLink.html(contentsElementData.description);
     contentsLink.attr('data-id', contentsId);
+    contentsLink.attr('tabindex', '0');
 
     var lineBreak = $('<hr>');
 
@@ -877,6 +880,7 @@ var toggleContentsAction = function() {
         toggleSharing(false, false);
         toggleUserPreferences(false, false);
         toggleDownloadPdfMenu(false, false);
+        $('[data-id = contentsItem0]').focus();
     } else {
         yudu_toolbarFunctions.setAutoHide(true);
     }
@@ -1109,6 +1113,13 @@ var buttonOtherThanTogglableHit = function(scope, callback) {
 var handleButtonTriggerKeyPressed = function() {
     var activeElementId = document.activeElement.id;
     if (!activeElementId) {
+        if (document.activeElement.classList.contains('contentsLink') && document.activeElement.hasAttribute('data-id')) {
+            var callback = contentsCallbacks[document.activeElement.getAttribute('data-id')];
+            document.activeElement.blur();
+            if (typeof callback == 'function') {
+                callback();
+            }
+        }
         return;
     }
 
@@ -1126,6 +1137,22 @@ var handleButtonTriggerKeyPressed = function() {
 var handleLoginSuccess = function() {
     userLoggedIn = true;
     showButton('logout');
+}
+
+var nextTocItem = function() {
+    var activeElement = document.activeElement;
+    if (activeElement.classList.contains("contentsLink")) {
+        var contentsElementId = parseInt(activeElement.getAttribute('data-id').slice(12));
+        $('[data-id = contentsItem' + (contentsElementId + 1) + ']').focus();
+    }
+}
+
+var prevTocItem = function() {
+    var activeElement = document.activeElement;
+    if (activeElement.classList.contains("contentsLink")) {
+        var contentsElementId = parseInt(activeElement.getAttribute('data-id').slice(12));
+        $('[data-id = contentsItem' + (contentsElementId - 1) + ']').focus();
+    }
 }
 
 
