@@ -1,14 +1,10 @@
-// we're using this plugin to combine and minify the JavaScript in this project
+import com.github.kpodvolecky.less.LessCompileTask
+import org.gradlewebtools.minify.JsMinifyTask
+
 plugins {
-    id "com.eriwen.gradle.js" version "2.14.1"
-    id "com.eriwen.gradle.css" version "2.14.0"
+    id "org.gradlewebtools.minify" version "1.3.2"
+    id "io.github.kpodvolecky.less.gradle-less-mt-plugin" version "0.2.0"
 }
-
-// apply the JavaScript plugin
-apply plugin: 'js'
-// apply the css plugin
-apply plugin: 'css'
-
 
 def subProjects = ['toolbar', 'toolbarPhoneview', 'thumbnails', 'loading', 'drawingToolbars', 'downloadPdfCustomSelectionToolbar']
 def minificationTasks = []
@@ -17,16 +13,13 @@ def cleaningTasks = []
 
 subProjects.each { name ->
     // create JavaScript minification tasks for each of the customisable parts of this branding pack
-    task "minify${name.capitalize()}Js"(type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
+    task "minify${name.capitalize()}Js"(type: JsMinifyTask) {
         group = 'JavaScript Minification'
         description "Minifies the JavaScript file for the ${name} and changes the config to use the minified file"
-        source = file("${name}/${name}.js")
-        dest = file("${name}/${name}.min.js")
-        sourceMap = file("${name}/${name}.min.sourcemap.json")
-        closure {
-            // set the log level
-            warningLevel = 'QUIET'
-        }
+        srcDir = file("${name}")
+        dstDir = file("${name}")
+        options.ignoreMinFiles = true
+        options.emitUseStrict = false
         doLast {
             // after minifying the JavaScript update the reference in the config file to the minified file rather than
             // the original source file
@@ -36,11 +29,13 @@ subProjects.each { name ->
     minificationTasks.add(tasks["minify${name.capitalize()}Js"])
 
     // create LESS compilation tasks for each of the customisable parts of this branding pack
-    task "compile${name.capitalize()}Css"(type: com.eriwen.gradle.css.tasks.LessTask) {
+    task "compile${name.capitalize()}Css"(type: LessCompileTask) {
         group = 'LESS Compilation'
         description "Compiles the LESS file for ${name}"
-        source = file("${name}/style.less")
-        dest = file("${name}/")
+        from fileTree("${name}") {
+            include("*.less")
+        }
+        destinationDirectory = file("${name}")
     }
     compilationTasks.add(tasks["compile${name.capitalize()}Css"])
 
@@ -131,8 +126,4 @@ task prepareBrandingPack(type: Copy, dependsOn: [copyBrandingPack, cleanSubmodul
     group = 'Branding Pack Build'
     description = "Coordinate copying the built pack and cleaning modified files"
     cleanSubmodules.mustRunAfter copyBrandingPack
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.14'
 }
