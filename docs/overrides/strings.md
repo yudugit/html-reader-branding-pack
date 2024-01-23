@@ -165,6 +165,7 @@ The current default English values are as follows (in JSON format):
     "orderForm.deliveryDetails.state": "State / Province",
     "orderForm.deliveryDetails.postCode": "Post / Zip Code",
     "orderForm.deliveryDetails.country": "Country",
-    "orderForm.deliveryDetails.additionalInformation": "Additional Information"
+    "orderForm.deliveryDetails.additionalInformation": "Additional Information",
+    "samsungInternetWarning.message": "It looks like you're using the Samsung Internet web browser. If you're using dark mode, this can display pages incorrectly. In that case, simply tap the burger menu item, select 'Light theme sites' and reload the page (this option is only available if you're using dark mode on your phone)."
 }
 ```
