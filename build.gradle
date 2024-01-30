@@ -120,6 +120,7 @@ task copyBrandingPack(type: Copy, dependsOn: [cleanBuild, build]) {
     include 'assets/noAccess.html'
     include 'logo.png'
     include 'placeholder.png'
+    include 'placeholder.svg'
     // exclude all sourcemap files
     exclude '**/*.min.sourcemap.json'
     // exclude all less files
