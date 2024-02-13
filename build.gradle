@@ -36,6 +36,7 @@ subProjects.each { name ->
             include("*.less")
         }
         destinationDirectory = file("${name}")
+        mustRunAfter "minify${name.capitalize()}Js"
     }
     compilationTasks.add(tasks["compile${name.capitalize()}Css"])
 
