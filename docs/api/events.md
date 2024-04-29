@@ -42,7 +42,6 @@ It follows the following structure:
 + `DRAWING_TOOLBARS`
     + `TOGGLE_TOOLBARS`
 + `LOADING`
-    + `DISPLAY_PROGRESS`
     + `END_LOADING`
 + `STATISTICS`
     + `VISITED`
