@@ -8,7 +8,6 @@ The current default English values are as follows (in JSON format):
 
 ```json
 {  
-    "loading.tiles": "Loading...",
     "sharing.shareTitle": "Share page",
     "sharing.firstPage": "First",
     "sharing.currentPage": "Current",
