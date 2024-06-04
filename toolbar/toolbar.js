@@ -248,6 +248,19 @@ var createButton = function(id, callback, highResIcons) {
         button.addClass('touchControl');
     }
 
+    if (yudu_toolbarSettings.buttonFocusColour){
+        button.focus(
+            function(){
+                button.css("background-color", "#"+yudu_toolbarSettings.buttonFocusColour);
+            }
+        );
+        button.blur(
+            function(){
+                button.css("background-color", "");
+            }
+        );
+    }
+
     buttonCallbacks[id] = callback;
 
     var icon = $('<img />')
