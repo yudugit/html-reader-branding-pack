@@ -7,8 +7,9 @@ var sharingUI = {};
 var shareCurrentPage = false;
 
 var toolbarInit = function() {
-    yudu_events.subscribe(yudu_events.ALL, yudu_events.TAP, hideSharing, false);
+    yudu_events.subscribe(yudu_events.ALL, yudu_events.TAP, hideTogglables, false);
     initSharing();
+    initUserPreferences();
 };
 
 var initSharing = function() {
@@ -157,6 +158,107 @@ var hideSharing = function() {
         return;
     }
     toggleSharing(false, false);
+};
+
+var hideTogglables = function() {
+    hideSharing();
+    hideUserPreferences();
+};
+
+/**
+ * User preferences controls
+ */
+var userPreferencesShowing = false;
+var userPreferencesUI = {};
+
+var initUserPreferences = function() {
+    userPreferencesUI = {
+        //preferences button on the toolbar
+        userPreferencesButton: $('#userPreferences'),
+        //preferences drop down elements
+        dialog: {
+            container: $('#yudu_userPreferences'),
+            checkboxes: $('#yudu_userPreferences input')
+        }
+    };
+
+    userPreferencesUI.dialog.checkboxes.change(function(event) {
+        var checkbox = $(event.target);
+        var settingName = checkbox.parent().attr('data-setting-name');
+        var value = checkbox.is(':checked');
+
+        if (settingName && window.yudu_commonFunctions.updateUserPreferenceSetting) {
+            window.yudu_commonFunctions.updateUserPreferenceSetting(settingName, value);
+        }
+    });
+
+    setUserPreferencesLeftPosition();
+    enableUserPreferencesSettings();
+};
+
+var enableUserPreferencesSettings = function() {
+    var foundEnabledSetting = false;
+
+    for (var settingName in yudu_toolbarSettings.userPreferences) {
+        if (!yudu_toolbarSettings.userPreferences.hasOwnProperty(settingName))continue;
+
+        var setting = yudu_toolbarSettings.userPreferences[settingName];
+        if (!setting.show) continue;
+
+        var fields = $('#yudu_userPreferences').children('div[data-setting-name=' + settingName + ']');
+        fields.show();
+
+        if (setting.default) {
+            fields.find("input[type='checkbox']").prop('checked', true);
+        }
+
+        foundEnabledSetting = foundEnabledSetting || (fields.length > 0);
+    }
+
+    return foundEnabledSetting;
+};
+
+var toggleUserPreferencesAction = function(makeVisible) {
+    if (makeVisible == true || makeVisible == false) {
+        toggleUserPreferences(false, makeVisible);
+    } else {
+        toggleUserPreferences(true);
+    }
+};
+
+var toggleUserPreferences = function(toggle, show) {
+    var shouldShow = toggle ? !userPreferencesShowing : show;
+
+    if (shouldShow == userPreferencesShowing) {
+        return userPreferencesShowing;
+    }
+    if (shouldShow) {
+        userPreferencesUI.dialog.container.show();
+        $('#yudu_userPreferences')[0].firstElementChild.firstElementChild.focus();
+    } else {
+        userPreferencesUI.dialog.container.hide();
+    }
+    userPreferencesShowing = shouldShow;
+    setUserPreferencesLeftPosition();
+    return userPreferencesShowing;
+};
+
+var setUserPreferencesLeftPosition = function() {
+    if (!userPreferencesShowing) {
+        return;
+    }
+
+    var userPreferencesButtonLeft = userPreferencesUI.userPreferencesButton.offset().left;
+    var userPreferencesLeft = Math.min(userPreferencesButtonLeft, yudu_commonSettings.width / yudu_commonSettings.pixelDensity - userPreferencesUI.dialog.container.width() - 10);
+    userPreferencesUI.dialog.container.css({"left": userPreferencesLeft});
+};
+
+var hideUserPreferences = function() {
+    if (!userPreferencesShowing) {
+        return;
+    }
+
+    toggleUserPreferences();
 };
 
 var cssFiles = [yudu_commonFunctions.createBrandingPath('toolbarPhoneview/style.css')];
