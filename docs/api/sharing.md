@@ -8,7 +8,7 @@ Its two components will be available as the following global variables:
 
 ## Sharing Settings
 
-+ `twitterIconPath` – the path of the image used for the Twitter icon in the sharing box
++ `twitterIconPath` – the path of the image used for the X (Twitter) icon in the sharing box
     + available only if `yudu_toolbarSettings.sharing.twitter` is `true`
 + `facebookIconPath` – the path of the image used for the Facebook icon in the sharing box
     + available only if `yudu_toolbarSettings.sharing.facebook` is `true`
@@ -22,7 +22,7 @@ Its two components will be available as the following global variables:
     + available only if any of the sharing options is `true`
 + `shareEmail` – call when the "share by email" button is clicked
     + available only if `yudu_toolbarSettings.sharing.emailEnabled` is `true`
-+ `shareTwitter` – call when the "share on Twitter" button is clicked
++ `shareTwitter` – call when the "share on X (Twitter)" button is clicked
     + available only if `yudu_toolbarSettings.sharing.twitter` is `true`
 + `shareFacebook` – call when the "share on Facebook" button is clicked
     + available only if `yudu_toolbarSettings.sharing.facebook` is `true`

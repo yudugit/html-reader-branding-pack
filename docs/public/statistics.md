@@ -145,7 +145,7 @@ The event data will contain a `target` property with the URL target for the subs
 
 ### Shared via Twitter
 
-If this event is enabled, it will be fired whenever someone shares the edition or a page from it via Twitter.
+If this event is enabled, it will be fired whenever someone shares the edition or a page from it via X (Twitter).
 Add a listener to respond to this event by subscribing to `yudu_events.STATISTICS.TWEETED`.
 
 The event data will contain a `target` property with the URL target for the share action.
