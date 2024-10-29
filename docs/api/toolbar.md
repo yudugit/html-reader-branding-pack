@@ -20,7 +20,7 @@ Its two components will be available as the following global variables:
 + `logoLinkUrlExists` – `true` if the edition was set up with the logo linking to a URL, `false` otherwise
 + `sharing`
     + `emailEnabled` – `true` if the edition can be shared by email, `false` otherwise
-    + `twitter` – `true` if the edition can be shared on Twitter, `false` otherwise
+    + `twitter` – `true` if the edition can be shared on X (Twitter), `false` otherwise
     + `facebook` – `true` if the edition can be shared on Facebook, `false` otherwise
 + `bookmarksEnabled` - `true` if the edition was set up with bookmarks (annotations) enabled, `false` otherwise
 + `notesEnabled` - `true` if the edition was set up with notes (annotations) enabled, `false` otherwise
