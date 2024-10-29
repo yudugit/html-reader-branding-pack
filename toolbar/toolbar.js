@@ -151,6 +151,7 @@ var createDesktopLogoutButton = function() {
     var altText = yudu_commonFunctions.getLocalisedStringByCode('toolbar.button.' + id);
     altText = altText.indexOf('toolbar.button.') === 0 ? id : altText;
     icon.attr('alt', altText).appendTo(button);
+    icon.attr('title', altText).appendTo(button);
     button.attr('aria-label', altText);
 
     icon.on('load', function() {
@@ -271,6 +272,7 @@ var createButton = function(id, callback, highResIcons) {
     var altText = yudu_commonFunctions.getLocalisedStringByCode('toolbar.button.' + id);
     altText = altText.indexOf('toolbar.button.') === 0 ? id : altText;
     icon.attr('alt', altText).appendTo(button);
+    icon.attr('title', altText).appendTo(button);
     button.attr('aria-label', altText);
 
     icon.on('load', function() {
