@@ -10,6 +10,7 @@ var toolbarInit = function() {
     yudu_events.subscribe(yudu_events.ALL, yudu_events.TAP, hideTogglables, false);
     initSharing();
     initUserPreferences();
+    initAudioPlayer();
 };
 
 var initSharing = function() {
@@ -163,6 +164,7 @@ var hideSharing = function() {
 var hideTogglables = function() {
     hideSharing();
     hideUserPreferences();
+    hideAudioPlayer();
 };
 
 /**
@@ -259,6 +261,70 @@ var hideUserPreferences = function() {
     }
 
     toggleUserPreferences();
+};
+
+/**
+ * Audio player controls
+ */
+var audioPlayerShowing = false;
+var audioPlayerUI = {};
+
+var initAudioPlayer = function() {
+    audioPlayerUI = {
+        //audio player button on the toolbar
+        audioPlayerButton: $('#audioPlayer'),
+        //audio player drop down elements
+        dialog: {
+            container: $('#yudu_audioPlayer'),
+            player: $('#yudu_audioPlayerControls'),
+        }
+    };
+
+    yudu_commonFunctions.setArticleAudioElements(audioPlayerUI.dialog.player, audioPlayerUI.audioPlayerButton);
+    setAudioPlayerLeftPosition();
+};
+
+
+var toggleAudioPlayerAction = function(makeVisible) {
+    if (makeVisible == true || makeVisible == false) {
+        toggleAudioPlayer(false, makeVisible);
+    } else {
+        toggleAudioPlayer(true);
+    }
+};
+
+var toggleAudioPlayer = function(toggle, show) {
+    var shouldShow = toggle ? !audioPlayerShowing : show;
+
+    if (shouldShow == audioPlayerShowing) {
+        return audioPlayerShowing;
+    }
+    if (shouldShow) {
+        audioPlayerUI.dialog.container.show();
+    } else {
+        audioPlayerUI.dialog.container.hide();
+    }
+    audioPlayerShowing = shouldShow;
+    setAudioPlayerLeftPosition();
+    return audioPlayerShowing;
+};
+
+var setAudioPlayerLeftPosition = function() {
+    if (!audioPlayerShowing) {
+        return;
+    }
+
+    var audioPlayerButtonLeft = audioPlayerUI.audioPlayerButton.offset().left;
+    var audioPlayerLeft = Math.min(audioPlayerButtonLeft, yudu_commonSettings.width / yudu_commonSettings.pixelDensity - audioPlayerUI.dialog.container.width() - 10);
+    audioPlayerUI.dialog.container.css({"left": audioPlayerLeft});
+};
+
+var hideAudioPlayer = function() {
+    if (!audioPlayerShowing) {
+        return;
+    }
+
+    toggleAudioPlayer();
 };
 
 var cssFiles = [yudu_commonFunctions.createBrandingPath('toolbarPhoneview/style.css')];
